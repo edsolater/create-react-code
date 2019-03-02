@@ -1,14 +1,18 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-/* placeholder: import related components */
+import User from './User'
+import TTT from './TTT'
+
 /* placeholder: import selectors */
 
-const $TM_FILENAME_BASE = (/* placeholder: use mapState */) => {
+const UserBoards = (/* placeholder: use mapState */) => {
   return (
-    <div className="$TM_FILENAME_BASE">
-      <span>this is $TM_FILENAME_BASE</span>
-      {/* placeholder: use related component */}
+    <div className="UserBoards">
+      <span>this is UserBoards</span>
+      <User />
+<TTT />
+
     </div>
   )
 }
@@ -24,4 +28,4 @@ const mapDispatch = {
 export default connect(
   /* placeholder: connect mapState */
   mapDispatch
-)($TM_FILENAME_BASE)
+)(UserBoards)
