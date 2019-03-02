@@ -1,10 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-/* placeholder: import related components */
 /* placeholder: import selectors */
+/* placeholder: import related components */
 
-const $TM_FILENAME_BASE = (/* placeholder: use mapState */) => {
+const $TM_FILENAME_BASE = (/* placeholder: get mapState Props */) => {
   return (
     <div className="$TM_FILENAME_BASE">
       <span>this is $TM_FILENAME_BASE</span>
@@ -12,16 +12,15 @@ const $TM_FILENAME_BASE = (/* placeholder: use mapState */) => {
     </div>
   )
 }
-/* placeholder: set mapState with selector */
-const mapState = (state) => ({
-  //below is example
-  //userBoards: getAllUserBoards(state.userBoards)
-})
+/* placeholder: set mapState with selectors */
+/* placeholder: set mapDispatch with actionCreators */
 const mapDispatch = {
   //below is example
   //addShelfBoardItem
 }
+
+/* placeholder: export component */
 export default connect(
-  /* placeholder: connect mapState */
+  mapState,
   mapDispatch
 )($TM_FILENAME_BASE)

@@ -1,46 +1,50 @@
 const fs = require('fs')
 const template = fs.readFileSync('./template.js')
-const config = require('./configs')
+const rule = require('./rules')
 const mindMap = require('./mindMap')
 
-const createNewData = (name, { childComponentNames = [], mapState = {} }) => {
-  // init newData
-  let newData = `${template}`
-
-  // replace $TM_FILENAME_BASE with current fileName
-  newData = newData.replace(/\$TM_FILENAME_BASE/gi, `${name}`)
-
-  // import related components
-  newData = newData.replace(
-    config.placeholder['import related components'],
-    config.codeBlockSyntax['import related components'](childComponentNames)
-  )
-
-  // use related components
-  newData = newData.replace(
-    config.placeholder['use related component'],
-    config.codeBlockSyntax['use related component'](childComponentNames)
-  )
-
-  // set mapState with selector
-  // const createMapState = (content) => `<${childName} />\n`
-  // const
-  // newData = newData.replace(
-  //   config.placeholder['set mapState'],
-  //   nodeBlock
-  // )
-  return newData
+const createContent = (
+  name,
+  { childComponentNames = [], mapState = {}, mapDispatch = {} }
+) => {
+  return `${template}`
+    .replace(/\$TM_FILENAME_BASE/gi, `${name}`) // replace $TM_FILENAME_BASE with current fileName
+    .replace(
+      // import related components
+      rule.placeholder['import related components'],
+      rule.codeBlockSyntax['import related components'](childComponentNames)
+    )
+    .replace(
+      // use related components
+      rule.placeholder['use related component'],
+      rule.codeBlockSyntax['use related component'](childComponentNames)
+    )
+    .replace(
+      // set mapState with selectors
+      rule.placeholder['set mapState with selectors'],
+      rule.codeBlockSyntax['set mapState with selectors'](mapState)
+    )
+    .replace(
+      // get mapState Props
+      rule.placeholder['get mapState Props'],
+      rule.codeBlockSyntax['get mapState Props'](mapState)
+    )
+    // .replace(
+    //   // export component
+    //   rule.placeholder['export component'],
+    //   rule.codeBlockSyntax['export component'](name, mapState, mapDispatch)
+    // )
 }
 
-const createFileTree = (partOfTree, currentPath = '.') => {
+const createFiles = (partOfTree, currentPath = '.') => {
   for ([name, value] of Object.entries(partOfTree)) {
     if (value.isFile) {
-      fs.writeFileSync(`${currentPath}/${name}.js`, createNewData(name, value))
+      fs.writeFileSync(`${currentPath}/${name}.js`, createContent(name, value))
     } else {
       fs.mkdirSync(`${currentPath}/${name}`)
-      createFileTree(value, `${currentPath}/${name}`)
+      createFiles(value, `${currentPath}/${name}`)
     }
   }
 }
 
-createFileTree(mindMap)
+createFiles(mindMap)
