@@ -13,7 +13,7 @@
 module.exports = {
   components: {
     UserBoards: {
-      type: 'component',
+      type: 'tab',//TODO: tab friendly template
       isFile: true,
       childComponentNames: ['User', 'TTT'],
       mapState: {
@@ -23,7 +23,6 @@ module.exports = {
       mapDispatch: ['getAction']
     },
     ShelfBoard: {
-      type: 'component',
       isFile: true
     }
   },
