@@ -1,0 +1,22 @@
+{
+  "name": "create-react-code",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edsolater/create-react-code.git"
+  },
+  "author": "edsolater <edsolater@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/edsolater/create-react-code/issues"
+  },
+  "homepage": "https://github.com/edsolater/create-react-code#readme",
+  "dependencies": {
+    "prettier": "^1.16.4"
+  }
+}

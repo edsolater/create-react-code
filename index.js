@@ -1,4 +1,5 @@
 const fs = require('fs')
+const prettier = require('prettier')
 const componentTemplate = fs.readFileSync('./template-component.js')
 const rule = require('./pattern&replacement')
 const mindMap = require('./mindMap')
@@ -98,3 +99,6 @@ createComponents(mindMap.components)
 fs.mkdirSync(`./${src}/data`)
 createSelectors()
 createActionCreators()
+
+
+// TODO: format the result
