@@ -1,8 +1,8 @@
 const fs = require('fs')
 const prettier = require('prettier')
-const componentTemplate = fs.readFileSync('./template-component.js')
-const rule = require('./pattern&replacement')
-const mindMap = require('./mindMap')
+const rule = require('./configs/component-replacement')
+const mindMap = require('./custom/mindMap')
+const componentTemplate = fs.readFileSync('./template/component.js')
 const src = 'src' // result folder
 const prettierConfig = {
   parser: 'babel', // empty warnings
@@ -112,4 +112,4 @@ fs.mkdirSync(`./${src}/data`)
 createSelectors()
 createActionCreators()
 
-// TODO: format the result
+// TODO: 把index 中的配置项分配到其他特有文件中
