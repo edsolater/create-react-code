@@ -10,7 +10,7 @@ const Wrapper = styled.div``
 
 const $TM_FILENAME_BASE = ({/* placeholder: get mapState Props *//* placeholder: get mapDispatch Props */}) => {
   return (
-    <Wrapper>
+    <Wrapper className="$TM_FILENAME_BASE">
       <span>this is $TM_FILENAME_BASE</span>
       {/* placeholder: use related components */}
     </Wrapper>
