@@ -14,7 +14,7 @@ module.exports = {
   components: {
     UserBoards: {
       type: 'tab',//TODO: tab friendly template
-      isFile: true,
+      isFile: true, //TODO: 这是冗余的信息，最终得去掉
       childComponentNames: ['User', 'TTT'],
       mapState: {
         user: 'getUser',
