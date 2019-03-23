@@ -15,12 +15,12 @@
 // }
 module.exports = {
   components: {
-    C__Parent: {
+    Parent__C: {
       mapState: {
         hello: 'selector1',
         hei: 'selector2'
       },
-      C__UserBoards: {
+      UserBoards__C: {
         type: 'tab', //TODO: tab friendly template
         wrapperType: 'section',
         style: {
@@ -34,7 +34,7 @@ module.exports = {
         },
         mapDispatch: ['getAction']
       },
-      C__ShelfBoard: true
+      ShelfBoard__C: true
     }
   },
   data: {

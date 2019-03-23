@@ -68,12 +68,12 @@ const create = {
 
       for (let [componentName, componentValue] of Object.entries(partOfTree)) {
         // 预处理：删去组件的标识性前缀 & 智能提取子组件的名字
-        componentName = componentName.replace('C__', '')
+        componentName = componentName.replace('__C', '')
         const childComponents = Object.entries(componentValue).filter(
-          ([key, value]) => key.startsWith('C__')
+          ([key, value]) => key.endsWith('__C')
         )
         componentValue.childComponentNames = childComponents.map(
-          ([componentName, componentValue]) => componentName.replace('C__', '')
+          ([componentName, componentValue]) => componentName.replace('__C', '')
         )
 
         // 写入文件
