@@ -5,7 +5,11 @@ import styled from 'styled-components'
 import User from './User'
 import TTT from './TTT'
 
-const Wrapper = styled.div``
+const Wrapper = styled.div`
+  width: 100;
+  height: 200;
+  backgroung-color: dodgerBlue;
+`
 
 const UserBoards = ({ user, haha, getAction }) => {
   return (
@@ -16,7 +20,7 @@ const UserBoards = ({ user, haha, getAction }) => {
     </Wrapper>
   )
 }
-const mapState = (state) => ({
+const mapState = state => ({
   user: getUser(state),
   haha: getHaha(state)
 })

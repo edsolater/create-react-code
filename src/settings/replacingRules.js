@@ -12,29 +12,29 @@ module.exports = {
       {
         pattern: /\$TM_FILENAME_BASE/g,
         replaceFunction: componentName => componentName,
-        replaceFunctionParams: 'componentName'
+        replaceFunctionParams: ['componentName']
       },
 
       // child components
       {
         pattern: '/* import child components */',
-        replaceFunction: childComponentNames =>
+        replaceFunction: (childComponentNames = []) =>
           childComponentNames
             .map(childName => `import ${childName} from './${childName}'\n`)
             .join(''),
-        replaceFunctionParams: 'childComponentNames'
+        replaceFunctionParams: ['childComponentNames']
       },
       {
         pattern: '{/* use child components */}',
-        replaceFunction: childComponentNames =>
+        replaceFunction: (childComponentNames = []) =>
           childComponentNames.map(childName => `<${childName} />\n`).join(''),
-        replaceFunctionParams: 'childComponentNames'
+        replaceFunctionParams: ['childComponentNames']
       },
 
       // mapState & selectors
       {
         pattern: '/* import selectors */',
-        replaceFunction: (mapState, selectorCollection = []) => {
+        replaceFunction: (mapState = {}, selectorCollection = []) => {
           selectorCollection.push(...Object.values(mapState))
           if (Object.entries(mapState).length) {
             return `import {${Object.values(
@@ -44,33 +44,33 @@ module.exports = {
             return ''
           }
         },
-        replaceFunctionParams: 'mapState, selectorCollection'
+        replaceFunctionParams: ['mapState', 'selectorCollection']
       },
       {
         pattern: '/* set mapState with selectors */',
-        replaceFunction: mapState => `const mapState = (state) => ({
+        replaceFunction: (mapState = {}) => `const mapState = (state) => ({
         ${Object.entries(mapState).map(
           ([prop, selector]) => `${prop}: ${selector}(state)`
         )}
       })`,
-        replaceFunctionParams: 'mapState'
+        replaceFunctionParams: ['mapState']
       },
       {
         pattern: '/* get mapState Props */',
-        replaceFunction: mapState => {
+        replaceFunction: (mapState = {}) => {
           if (Object.entries(mapState).length) {
             return `${Object.keys(mapState)},`
           } else {
             return ''
           }
         },
-        replaceFunctionParams: 'mapState'
+        replaceFunctionParams: ['mapState']
       },
 
       // mapDispatch & actionCreators
       {
         pattern: '/* import actionCreators */',
-        replaceFunction: (mapDispatch, actionCreatorCollection = []) => {
+        replaceFunction: (mapDispatch = [], actionCreatorCollection = []) => {
           actionCreatorCollection.push(...mapDispatch)
           if (mapDispatch.length) {
             return `import {${mapDispatch}} from '../data/actionCreators'`
@@ -78,30 +78,46 @@ module.exports = {
             return ''
           }
         },
-        replaceFunctionParams: 'mapDispatch, actionCreatorCollection'
+        replaceFunctionParams: ['mapDispatch', 'actionCreatorCollection']
       },
       {
         pattern: '/* set mapDispatch with actionCreators */',
-        replaceFunction: mapDispatch => `const mapDispatch = {${mapDispatch}}`,
-        replaceFunctionParams: 'mapDispatch'
+        replaceFunction: (mapDispatch = []) =>
+          `const mapDispatch = {${mapDispatch}}`,
+        replaceFunctionParams: ['mapDispatch']
       },
       {
         pattern: '/* get mapDispatch Props */',
-        replaceFunction: mapDispatch => {
+        replaceFunction: (mapDispatch = []) => {
           if (mapDispatch.length) {
             return `${mapDispatch}`
           } else {
             return ''
           }
         },
-        replaceFunctionParams: 'mapDispatch'
+        replaceFunctionParams: ['mapDispatch']
+      },
+
+      // styled-component settings
+      {
+        pattern: '/* wrapperType */ div',
+        replaceFunction: (wrapperType = 'div') => wrapperType,
+        replaceFunctionParams: ['wrapperType']
+      },
+      {
+        pattern: '/* style */',
+        replaceFunction: (style = {}) =>
+          Object.entries(style)
+            .map(([CSSName, CSSValue]) => `${CSSName}: ${CSSValue};`)
+            .join('\n'),
+        replaceFunctionParams: ['style']
       }
     ]
   },
   // for creating selectors
   selector: {
     generateContentBy: selectorCollection => {
-      if (!selectorCollection.length) {
+      if (!selectorCollection || !selectorCollection.length) {
         return '// no selector in this app'
       } else {
         return selectorCollection

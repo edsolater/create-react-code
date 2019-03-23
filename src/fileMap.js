@@ -28,7 +28,8 @@ module.exports = {
       style: {
         //TODO
         width: 100,
-        height: 200
+        height: 200,
+        'backgroung-color': 'dodgerBlue'
       }
     },
     ShelfBoard: {

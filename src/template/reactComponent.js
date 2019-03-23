@@ -6,9 +6,16 @@ import styled from 'styled-components'
 /* import actionCreators */
 /* import child components */
 
-const Wrapper = styled.div``
+const Wrapper = styled./* wrapperType */ div`
+  /* style */
+`
 
-const $TM_FILENAME_BASE = ({/* get mapState Props *//* get mapDispatch Props */}) => {
+const $TM_FILENAME_BASE = (
+  {
+    /* get mapState Props */
+    /* get mapDispatch Props */
+  }
+) => {
   return (
     <Wrapper className="$TM_FILENAME_BASE">
       <span>this is $TM_FILENAME_BASE</span>
