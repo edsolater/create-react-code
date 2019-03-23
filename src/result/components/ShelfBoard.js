@@ -11,6 +11,7 @@ const ShelfBoard = ({}) => {
     </Wrapper>
   )
 }
+
 const mapState = (state) => ({})
 const mapDispatch = {}
 

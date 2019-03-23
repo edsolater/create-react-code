@@ -15,31 +15,32 @@
 // }
 module.exports = {
   components: {
-    UserBoards: {
-      type: 'tab', //TODO: tab friendly template
-      isFile: true, //TODO: 这是冗余的信息，最终得去掉
-      childComponentNames: ['User', 'TTT'],
+    C__Parent: {
       mapState: {
-        user: 'getUser',
-        haha: 'getHaha'
+        hello: 'selector1',
+        hei: 'selector2'
       },
-      mapDispatch: ['getAction'],
-      wrapper: 'section', //TODO
-      style: {
-        //TODO
-        width: 100,
-        height: 200,
-        'backgroung-color': 'dodgerBlue'
-      }
-    },
-    ShelfBoard: {
-      isFile: true
+      C__UserBoards: {
+        type: 'tab', //TODO: tab friendly template
+        wrapperType: 'section',
+        style: {
+          width: 100,
+          height: 200,
+          'backgroung-color': 'dodgerBlue'
+        },
+        mapState: {
+          user: 'getUser',
+          haha: 'getHaha'
+        },
+        mapDispatch: ['getAction']
+      },
+      C__ShelfBoard: true
     }
   },
   data: {
     //TODO
     class: ['Board', 'Item'], //TODO
-    reducers: ['items', 'shelfBoard', 'userBoard'], //TODO
+    reducers: ['items', 'shelfBoard', 'userBoard'] //TODO
     // auto generate actionCreators.js
     // auto generate selectors.js
     // auto generate store.js //TODO

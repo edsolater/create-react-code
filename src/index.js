@@ -39,7 +39,7 @@ const create = {
       function createContent(
         // will be used by eval()
         componentName,
-        componentInfo
+        componentValue
       ) {
         const componentTemplate = fs.readFileSync(
           './template/reactComponent.js'
@@ -56,7 +56,7 @@ const create = {
                     .map(param =>
                       param === 'componentName'
                         ? 'componentName' // 如果需要传参 componentName ,则不附上前缀
-                        : `componentInfo.${param}`
+                        : `componentValue.${param}`
                     )
                     .join(',')
                 )
@@ -66,18 +66,29 @@ const create = {
         )
       }
 
-      for ([componentName, componentInfo] of Object.entries(partOfTree)) {
-        const path = `${currentPath}/${componentName}`
-        if (componentInfo.isFile) {
-          const file = `${path}.js`
-          const formattedContent = prettier.format(
-            createContent(componentName, componentInfo),
-            prettierConfig
+      for (let [componentName, componentValue] of Object.entries(partOfTree)) {
+        // 预处理：删去组件的标识性前缀 & 智能提取子组件的名字
+        componentName = componentName.replace('C__', '')
+        const childComponents = Object.entries(componentValue).filter(
+          ([key, value]) => key.startsWith('C__')
+        )
+        componentValue.childComponentNames = childComponents.map(
+          ([componentName, componentValue]) => componentName.replace('C__', '')
+        )
+
+        // 写入文件
+        const file = `${currentPath}/${componentName}.js`
+        const formattedContent = prettier.format(
+          createContent(componentName, componentValue),
+          prettierConfig
+        )
+        fs.writeFileSync(file, formattedContent)
+
+        // 递归地创造子组件
+        if (childComponents.length) {
+          childComponents.forEach(([componentName, componentValue]) =>
+            create.files.reactComponents({ [componentName]: componentValue })
           )
-          fs.writeFileSync(file, formattedContent)
-        } else {
-          fs.mkdirSync(path)
-          createFileComponents(componentInfo, path)
         }
       }
     },
