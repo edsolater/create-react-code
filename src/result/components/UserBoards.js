@@ -9,8 +9,8 @@ const Wrapper = styled.div``
 
 const UserBoards = ({ user, haha, getAction }) => {
   return (
-    <Wrapper className="$TM_FILENAME_BASE">
-      <span>this is $TM_FILENAME_BASE</span>
+    <Wrapper className="UserBoards">
+      <span>this is UserBoards</span>
       <User />
       <TTT />
     </Wrapper>
@@ -25,4 +25,4 @@ const mapDispatch = { getAction }
 export default connect(
   mapState,
   mapDispatch
-)($TM_FILENAME_BASE)
+)(UserBoards)

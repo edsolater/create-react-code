@@ -6,8 +6,8 @@ const Wrapper = styled.div``
 
 const ShelfBoard = ({}) => {
   return (
-    <Wrapper className="$TM_FILENAME_BASE">
-      <span>this is $TM_FILENAME_BASE</span>
+    <Wrapper className="ShelfBoard">
+      <span>this is ShelfBoard</span>
     </Wrapper>
   )
 }
@@ -17,4 +17,4 @@ const mapDispatch = {}
 export default connect(
   mapState,
   mapDispatch
-)($TM_FILENAME_BASE)
+)(ShelfBoard)

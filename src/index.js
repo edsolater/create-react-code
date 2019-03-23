@@ -16,7 +16,6 @@ function createFileComponents(
   partOfTree,
   currentPath = `./${resultFolder}/components`
 ) {
-  const componentTemplate = fs.readFileSync('./template/reactComponent.js')
   /**
    *
    * @param {string} componentName component's name
@@ -29,12 +28,13 @@ function createFileComponents(
     componentName,
     { childComponentNames = [], mapState = {}, mapDispatch = [] }
   ) {
+    const componentTemplate = fs.readFileSync('./template/reactComponent.js')
     // 利用 ruduce()，应用所有的替换规则
     return fileSettings.component.rules.reduce(
-      (resultString, { placeholder, replaceFunction, replaceFunctionParams }) =>
+      (resultString, { pattern, replaceFunction, replaceFunctionParams }) =>
         resultString.replace(
           // use replace(string, string)
-          placeholder,
+          pattern,
           replaceFunction(eval(replaceFunctionParams))
         ),
       `${componentTemplate}`
@@ -86,12 +86,14 @@ function createFileActionCreators() {
  */
 function createFileClass() {
   // TODO: 逻辑仿照 createFileComponents 的
-  for (customedClasses of fileMap.data.class) {
-    const file = `./${resultFolder}/data/class${customedClasses}`
-    const formattedContent = prettier.format(
-      fileSettings.actionCreator.generateContentBy(actionCreatorCollection),
-      prettierConfig
-    )
+  function createContent(customedClassName) {
+    const customedClassTemplate = fs.readFileSync('./template/customedClasses.js')
+    // 利用 ruduce()，应用所有的替换规则
+    return `${customedClassTemplate}`.replace(/\$TM_FILENAME_BASE/gi, `${customedClassName}`)
+  }
+  for (customedClassName of fileMap.data.class) {
+    const file = `./${resultFolder}/data/class/${customedClassName}`
+    const formattedContent = prettier.format(createContent(customedClassName), prettierConfig)
     fs.writeFileSync(file, formattedContent)
   }
 }
@@ -107,12 +109,9 @@ createFileComponents(fileMap.components)
 createFileSelectors()
 createFileActionCreators()
 
+// create customedClasses
 if (fileMap.data.class && !fs.existsSync(`./${resultFolder}/data/class`)) {
   fs.mkdirSync(`./${resultFolder}/data/class`)
-  // createFileClass()
+  createFileClass()
 }
 
-// create system file
-createFileComponents(fileMap.components)
-createFileSelectors()
-createFileActionCreators()
