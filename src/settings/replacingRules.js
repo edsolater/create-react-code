@@ -3,14 +3,21 @@ module.exports = {
   component: {
     rules: [
       // example: {
-      //   placeholder: '/* placeholder: placeholderName*/',
+      //   placeholder: '/* placeholderName*/',
       //   replaceFunction(){},
       //   replaceFunctionParams:['parameter']
       //   }
 
-      //related components
+      // component's name
       {
-        placeholder: '/* placeholder: import related components */',
+        placeholder: '$TM_FILENAME_BASE',
+        replaceFunction: componentName => componentName,
+        replaceFunctionParams: 'componentName'
+      },
+
+      // child components
+      {
+        placeholder: '/* import child components */',
         replaceFunction: childComponentNames =>
           childComponentNames
             .map(childName => `import ${childName} from './${childName}'\n`)
@@ -18,7 +25,7 @@ module.exports = {
         replaceFunctionParams: 'childComponentNames'
       },
       {
-        placeholder: '{/* placeholder: use related components */}',
+        placeholder: '{/* use child components */}',
         replaceFunction: childComponentNames =>
           childComponentNames.map(childName => `<${childName} />\n`).join(''),
         replaceFunctionParams: 'childComponentNames'
@@ -26,11 +33,13 @@ module.exports = {
 
       // mapState & selectors
       {
-        placeholder: '/* placeholder: import selectors */',
+        placeholder: '/* import selectors */',
         replaceFunction: (mapState, selectorCollection = []) => {
           selectorCollection.push(...Object.values(mapState))
           if (Object.entries(mapState).length) {
-            return `import {${Object.values(mapState)}} from '../data/selectors'`
+            return `import {${Object.values(
+              mapState
+            )}} from '../data/selectors'`
           } else {
             return ''
           }
@@ -38,7 +47,7 @@ module.exports = {
         replaceFunctionParams: 'mapState, selectorCollection'
       },
       {
-        placeholder: '/* placeholder: set mapState with selectors */',
+        placeholder: '/* set mapState with selectors */',
         replaceFunction: mapState => `const mapState = (state) => ({
         ${Object.entries(mapState).map(
           ([prop, selector]) => `${prop}: ${selector}(state)`
@@ -47,7 +56,7 @@ module.exports = {
         replaceFunctionParams: 'mapState'
       },
       {
-        placeholder: '/* placeholder: get mapState Props */',
+        placeholder: '/* get mapState Props */',
         replaceFunction: mapState => {
           if (Object.entries(mapState).length) {
             return `${Object.keys(mapState)},`
@@ -60,7 +69,7 @@ module.exports = {
 
       // mapDispatch & actionCreators
       {
-        placeholder: '/* placeholder: import actionCreators */',
+        placeholder: '/* import actionCreators */',
         replaceFunction: (mapDispatch, actionCreatorCollection = []) => {
           actionCreatorCollection.push(...mapDispatch)
           if (mapDispatch.length) {
@@ -72,12 +81,12 @@ module.exports = {
         replaceFunctionParams: 'mapDispatch, actionCreatorCollection'
       },
       {
-        placeholder: '/* placeholder: set mapDispatch with actionCreators */',
+        placeholder: '/* set mapDispatch with actionCreators */',
         replaceFunction: mapDispatch => `const mapDispatch = {${mapDispatch}}`,
         replaceFunctionParams: 'mapDispatch'
       },
       {
-        placeholder: '/* placeholder: get mapDispatch Props */',
+        placeholder: '/* get mapDispatch Props */',
         replaceFunction: mapDispatch => {
           if (mapDispatch.length) {
             return `${mapDispatch}`

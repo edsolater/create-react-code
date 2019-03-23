@@ -1,3 +1,6 @@
+/**
+ * @description 这个文件用于自定义文档结构
+ */
 // example:
 // module.exports = {
 //   miniShop: {
@@ -13,14 +16,20 @@
 module.exports = {
   components: {
     UserBoards: {
-      type: 'tab',//TODO: tab friendly template
+      type: 'tab', //TODO: tab friendly template
       isFile: true, //TODO: 这是冗余的信息，最终得去掉
       childComponentNames: ['User', 'TTT'],
       mapState: {
         user: 'getUser',
         haha: 'getHaha'
       },
-      mapDispatch: ['getAction']
+      mapDispatch: ['getAction'],
+      wrapper: 'section', //TODO
+      style: {
+        //TODO
+        width: 100,
+        height: 200
+      }
     },
     ShelfBoard: {
       isFile: true
@@ -28,19 +37,10 @@ module.exports = {
   },
   data: {
     //TODO
-    class: {
-      //TODO
-      Board: { isFile: true }, //TODO
-      Item: { isFile: true } //TODO
-    }, //TODO
-    reducers: {
-      //TODO
-      items: { isFile: true }, //TODO
-      shelfBoards: { isFile: true }, //TODO
-      userBoards: { isFile: true } //TODO
-    }, //TODO
-    // auto generate actionCreators
-    // auto generate selectors
-    store: { isFile: true } //TODO
+    class: ['Board', 'Item'], //TODO
+    reducers: ['items', 'shelfBoard', 'userBoard'], //TODO
+    // auto generate actionCreators.js
+    // auto generate selectors.js
+    // auto generate store.js //TODO
   }
 }

@@ -2,22 +2,17 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-/* import selectors */
-/* import actionCreators */
-/* import child components */
-
 const Wrapper = styled.div``
 
-const $TM_FILENAME_BASE = ({/* get mapState Props *//* get mapDispatch Props */}) => {
+const ShelfBoard = ({}) => {
   return (
     <Wrapper className="$TM_FILENAME_BASE">
       <span>this is $TM_FILENAME_BASE</span>
-      {/* use child components */}
     </Wrapper>
   )
 }
-/* set mapState with selectors */
-/* set mapDispatch with actionCreators */
+const mapState = (state) => ({})
+const mapDispatch = {}
 
 export default connect(
   mapState,

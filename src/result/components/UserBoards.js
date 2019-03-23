@@ -2,22 +2,25 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-/* import selectors */
-/* import actionCreators */
-/* import child components */
+import User from './User'
+import TTT from './TTT'
 
 const Wrapper = styled.div``
 
-const $TM_FILENAME_BASE = ({/* get mapState Props *//* get mapDispatch Props */}) => {
+const UserBoards = ({ user, haha, getAction }) => {
   return (
     <Wrapper className="$TM_FILENAME_BASE">
       <span>this is $TM_FILENAME_BASE</span>
-      {/* use child components */}
+      <User />
+      <TTT />
     </Wrapper>
   )
 }
-/* set mapState with selectors */
-/* set mapDispatch with actionCreators */
+const mapState = (state) => ({
+  user: getUser(state),
+  haha: getHaha(state)
+})
+const mapDispatch = { getAction }
 
 export default connect(
   mapState,
