@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
+/* import material-ui core */
+/* import material-ui icons */
 
 /* import selectors */
 /* import actionCreators */
@@ -18,8 +20,10 @@ const $TM_FILENAME_BASE = (
 ) => {
   return (
     <Wrapper className="$TM_FILENAME_BASE">
+      {/* use material-ui coreMain::startTag */}
       <span>this is $TM_FILENAME_BASE</span>
       {/* use child components */}
+      {/* use material-ui coreMain::endTag */}
     </Wrapper>
   )
 }
