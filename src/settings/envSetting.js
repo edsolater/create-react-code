@@ -1,6 +1,6 @@
 module.exports = {
-  resultFolder: 'result', // result folder
-  prettierConfig: {
+  setting_outputFolderName: 'output', // output folder
+  setting_prettierConfig: {
     parser: 'babel', // empty warnings
     arrowParens: 'always',
     semi: false,
