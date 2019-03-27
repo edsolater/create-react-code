@@ -45,66 +45,52 @@ const create = {
       function createContent(
         // will be used by eval()
         componentName,
-        componentValue
+        componentProperties
       ) {
         const componentTemplate = fs.readFileSync('./template/reactComponent.js')
         return replacingRules.component.rules.reduce(
-          (contentString, { pattern, replaceFunction, replaceFunctionParams }) => {
-            // const collection_paramString = replaceFunctionParams.map(param =>
-            //   param === 'componentName'
-            //     ? 'componentName' // 如果需要传参 componentName ,则不附上前缀
-            //     : `componentValue.${param}`
-            // )
-            // try {
-            //   return contentString.replace(
-            //     pattern,
-            //     replaceFunction(eval(collection_paramString.join(',')))
-            //   )
-            // } catch (e) {
-            //   console.error("the param isn't exist")
-            // }
-            return contentString.replace(
+          (contentString, { pattern, replaceFunction, componentKey }) =>
+            contentString.replace(
               // string.prototype.replace(string, string)
               pattern,
               replaceFunction(
                 eval(
-                  replaceFunctionParams
+                  componentKey
                     .map(param =>
                       param === 'componentName'
                         ? 'componentName' // 如果需要传参 componentName ,则不附上前缀
-                        : `componentValue.${param}`
+                        : `componentProperties.${param}`
                     )
                     .join(',')
                 )
               )
-            )
-          },
+            ),
           `${componentTemplate}`
         )
       }
 
-      for (let [componentName, componentValue] of Object.entries(partOfTree)) {
+      for (let [componentName, componentProperties] of Object.entries(partOfTree)) {
         // 预处理：删去组件的标识性前缀 & 智能提取子组件的名字
         componentName = componentName.replace('__C', '')
-        const childComponents = Object.entries(componentValue).filter(([key, value]) =>
+        const childComponents = Object.entries(componentProperties).filter(([key, value]) =>
           key.endsWith('__C')
         )
-        componentValue.childComponentNames = childComponents.map(
-          ([componentName, componentValue]) => componentName.replace('__C', '')
+        componentProperties.childComponentNames = childComponents.map(
+          ([componentName, componentProperties]) => componentName.replace('__C', '')
         )
 
         // 写入文件
         const file = `${currentPath}/${componentName}.js`
         const formattedContent = prettier.format(
-          createContent(componentName, componentValue),
+          createContent(componentName, componentProperties),
           setting_prettierConfig
         )
         fs.writeFileSync(file, formattedContent)
 
         // 递归地创造子组件
         if (childComponents.length) {
-          childComponents.forEach(([componentName, componentValue]) =>
-            create.files.reactComponents({ [componentName]: componentValue })
+          childComponents.forEach(([componentName, componentProperties]) =>
+            create.files.reactComponents({ [componentName]: componentProperties })
           )
         }
       }

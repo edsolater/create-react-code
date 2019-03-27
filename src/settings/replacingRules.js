@@ -16,14 +16,14 @@ module.exports = {
       // example: {
       //   pattern: '/* placeholderName*/',
       //   replaceFunction(){},
-      //   replaceFunctionParams:['parameter']
+      //   componentKey:['parameter']
       //   }
 
       // component's name
       {
         pattern: /\$TM_FILENAME_BASE/g,
         replaceFunction: componentName => componentName,
-        replaceFunctionParams: ['componentName']
+        componentKey: ['componentName']
       },
       // import material-ui core
       {
@@ -39,7 +39,7 @@ module.exports = {
             return ''
           }
         },
-        replaceFunctionParams: ['materialUI']
+        componentKey: ['materialUI']
       },
       // import material-ui icons
       {
@@ -53,7 +53,7 @@ module.exports = {
             return ''
           }
         },
-        replaceFunctionParams: ['materialUI']
+        componentKey: ['materialUI']
       },
       // import child components
       {
@@ -62,14 +62,14 @@ module.exports = {
           childComponentNames
             .map(childName => `import ${childName} from './${childName}'\n`)
             .join(''),
-        replaceFunctionParams: ['childComponentNames']
+        componentKey: ['childComponentNames']
       },
       // use child components
       {
         pattern: '{/* use child components */}',
         replaceFunction: (childComponentNames = []) =>
           childComponentNames.map(childName => `<${childName} />\n`).join(''),
-        replaceFunctionParams: ['childComponentNames']
+        componentKey: ['childComponentNames']
       },
       // import selectors
       {
@@ -84,7 +84,7 @@ module.exports = {
             return ''
           }
         },
-        replaceFunctionParams: ['mapState', 'selectorCollection']
+        componentKey: ['mapState', 'selectorCollection']
       },
       // set mapState with selectors
       {
@@ -94,7 +94,7 @@ module.exports = {
           ([prop, selector]) => `${prop}: ${selector}(state)`
         )}
       })`,
-        replaceFunctionParams: ['mapState']
+        componentKey: ['mapState']
       },
       // get mapState Props
       {
@@ -106,7 +106,7 @@ module.exports = {
             return ''
           }
         },
-        replaceFunctionParams: ['mapState']
+        componentKey: ['mapState']
       },
       // import actionCreators
       {
@@ -120,14 +120,14 @@ module.exports = {
             return ''
           }
         },
-        replaceFunctionParams: ['mapDispatch', 'actionCreatorCollection']
+        componentKey: ['mapDispatch', 'actionCreatorCollection']
       },
       // set mapDispatch with actionCreators
       {
         pattern: '/* set mapDispatch with actionCreators */',
         replaceFunction: (mapDispatch = []) =>
           `const mapDispatch = {${mapDispatch}}`,
-        replaceFunctionParams: ['mapDispatch']
+        componentKey: ['mapDispatch']
       },
       // get mapDispatch Props
       {
@@ -139,13 +139,13 @@ module.exports = {
             return ''
           }
         },
-        replaceFunctionParams: ['mapDispatch']
+        componentKey: ['mapDispatch']
       },
       // wrapperType
       {
         pattern: '/* wrapperType */ div',
         replaceFunction: (wrapperType = 'div') => wrapperType,
-        replaceFunctionParams: ['wrapperType']
+        componentKey: ['wrapperType']
       },
       // style
       {
@@ -154,7 +154,7 @@ module.exports = {
           Object.entries(style)
             .map(([CSSName, CSSValue]) => `${CSSName}: ${CSSValue};`)
             .join('\n'),
-        replaceFunctionParams: ['style']
+        componentKey: ['style']
       }
     ]
   },
