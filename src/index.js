@@ -6,8 +6,10 @@ const contentRule = require('./contentRule')
 const appStructure = require('./appStructure')
 const { setting_outputFolderName, setting_prettierConfig } = require('./envSetting')
 
-const collection_selectorName = ['hello']
-const collection_actionCreatorName = []
+const collection = {
+  selectorName: [],
+  actionCreatorName: []
+}
 
 const create = {
   folder: {
@@ -25,31 +27,7 @@ const create = {
     }
   },
   files: {
-    reactComponents(partOfTree, currentPath = `./${setting_outputFolderName}/components`) {
-      /**
-       *
-       * @param {string} componentName component's name
-       * @param {[]} childComponentNames collect childComponents' names
-       * @param {{}} mapState  collect props get by redux-selectors
-       * @param {} mapDispatch  collect  redux-actionCreator
-       */
-      function createContent(
-        // will be used by eval()
-        componentName,
-        componentProperties
-      ) {
-        const componentTemplate = fs.readFileSync('./template/reactComponent.js')
-        return contentRule.reactComponent.reduce(
-          (contentString, { pattern, replaceFunction, parameters }) =>
-            contentString.replace(
-              // string.prototype.replace(string, string)
-              pattern,
-              replaceFunction(...parameters.map(param => eval(param)))
-            ),
-          `${componentTemplate}`
-        )
-      }
-
+    reactComponent(partOfTree, currentPath = `./${setting_outputFolderName}/components`) {
       for (let [componentName, componentProperties] of Object.entries(partOfTree)) {
         // 预处理：删去组件的标识性前缀 & 智能提取子组件的名字
         componentName = componentName.replace('__C', '')
@@ -63,7 +41,7 @@ const create = {
         // 写入文件
         const file = `${currentPath}/${componentName}.js`
         const formattedContent = prettier.format(
-          createContent(componentName, componentProperties),
+          contentRule.reactComponent(componentName, componentProperties, collection),
           setting_prettierConfig
         )
         fs.writeFileSync(file, formattedContent)
@@ -71,7 +49,7 @@ const create = {
         // 递归地创造子组件
         if (childComponents.length) {
           childComponents.forEach(([componentName, componentProperties]) =>
-            create.files.reactComponents({ [componentName]: componentProperties })
+            create.files.reactComponent({ [componentName]: componentProperties })
           )
         }
       }
@@ -80,7 +58,7 @@ const create = {
     selector() {
       const file = `./${setting_outputFolderName}/data/selectors.js`
       const formattedContent = prettier.format(
-        contentRule.selectors(collection_selectorName),
+        contentRule.selectors(collection.selectorName),
         setting_prettierConfig
       )
       fs.writeFileSync(file, formattedContent)
@@ -89,23 +67,17 @@ const create = {
     actionCreator() {
       const file = `./${setting_outputFolderName}/data/actionCreators.js`
       const formattedContent = prettier.format(
-        contentRule.actionCreators(collection_actionCreatorName),
+        contentRule.actionCreators(collection.actionCreatorName),
         setting_prettierConfig
       )
       fs.writeFileSync(file, formattedContent)
     },
 
     classes() {
-      // TODO: 逻辑仿照 createFileComponents 的
-      function createContent(customedClassName) {
-        const customedClassTemplate = fs.readFileSync('./template/customedClasses.js')
-        // 利用 ruduce()，应用所有的替换规则
-        return `${customedClassTemplate}`.replace(/\$TM_FILENAME_BASE/gi, `${customedClassName}`)
-      }
       for (customedClassName of appStructure.data.class) {
-        const file = `./${setting_outputFolderName}/data/class/${customedClassName}`
+        const file = `./${setting_outputFolderName}/data/class/${customedClassName}.js`
         const formattedContent = prettier.format(
-          createContent(customedClassName),
+          contentRule.classes(customedClassName),
           setting_prettierConfig
         )
         fs.writeFileSync(file, formattedContent)
@@ -113,7 +85,9 @@ const create = {
     },
 
     store() {
-      // TODO
+      const file = `./${setting_outputFolderName}/data/store.js`
+      const formattedContent = prettier.format(contentRule.store(), setting_prettierConfig)
+      fs.writeFileSync(file, formattedContent)
     }
   }
 }
@@ -124,13 +98,13 @@ if (!fs.existsSync(`./${setting_outputFolderName}`)) {
   create.folder.reactComponents()
   create.folder.data()
 }
+
 // create|cover file
-create.files.reactComponents(appStructure.components)
+create.files.reactComponent(appStructure.components)
 create.files.selector()
 create.files.actionCreator()
-
-// // create customedClasses
-// if (appStructure.data.class && !fs.existsSync(`./${resultFolder}/data/class`)) {
-//   fs.mkdirSync(`./${resultFolder}/data/class`)
-//   createFileClass()
-// }
+if (appStructure.data.class && !fs.existsSync(`./${setting_outputFolderName}/data/class`)) {
+  fs.mkdirSync(`./${setting_outputFolderName}/data/class`)
+  create.files.classes()
+}
+create.files.store()

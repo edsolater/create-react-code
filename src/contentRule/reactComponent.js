@@ -1,3 +1,4 @@
+const fs = require('fs')
 const preprocessing = {
   stringToArray(param = []) {
     return Array.isArray(param) ? param : [param]
@@ -9,8 +10,7 @@ const preprocessing = {
     return `${preprocessing.toPascalCase(string)}Icon`
   }
 }
-
-module.exports = [
+const replacingRules = [
   // example: {
   //   pattern: '/* placeholderName*/',
   //   replaceFunction(){},
@@ -78,7 +78,7 @@ module.exports = [
         return ''
       }
     },
-    parameters: ['componentProperties.mapState', 'collection_selectorName']
+    parameters: ['componentProperties.mapState', 'collection.selectorName']
   },
   // set mapState with selectors
   {
@@ -112,7 +112,7 @@ module.exports = [
         return ''
       }
     },
-    parameters: ['componentProperties.mapDispatch', 'collection_actionCreatorName']
+    parameters: ['componentProperties.mapDispatch', 'collection.actionCreatorName']
   },
   // set mapDispatch with actionCreators
   {
@@ -148,3 +148,21 @@ module.exports = [
     parameters: ['componentProperties.style']
   }
 ]
+
+module.exports = (
+  // will be used by eval()
+  componentName,
+  componentProperties,
+  collection = {}
+) => {
+  const componentTemplate = fs.readFileSync('./template/reactComponent.js')
+  return replacingRules.reduce(
+    (contentString, { pattern, replaceFunction, parameters }) =>
+      contentString.replace(
+        // string.prototype.replace(string, string)
+        pattern,
+        replaceFunction(...parameters.map(param => eval(param)))
+      ),
+    `${componentTemplate}`
+  )
+}

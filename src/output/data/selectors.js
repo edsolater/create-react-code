@@ -1,7 +1,3 @@
-export const hello = (state) => {
-  // haven't defined yet
-}
-
 export const selector1 = (state) => {
   // haven't defined yet
 }
