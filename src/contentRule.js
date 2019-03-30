@@ -57,7 +57,7 @@ const replacingRules = [
   {
     pattern: '/* import child components */',
     replaceFunction: (childComponentNames = []) =>
-      childComponentNames.map(childName => `import ${childName} from './${childName}'\n`).join(''),
+      childComponentNames.length ? `import {${childComponentNames.join(',')}} from '../components'` : '',
     parameters: ['componentProperties.childComponentNames']
   },
   // use child components
@@ -102,7 +102,7 @@ const replacingRules = [
   },
   // import actionCreators
   {
-    pattern: '/* import actionCreators */',
+    pattern: '\n/* import actionCreators */',
     replaceFunction: (mapDispatch = [], actionCreatorCollection = []) => {
       mapDispatch = preprocessing.stringToArray(mapDispatch)
       actionCreatorCollection.push(...mapDispatch)
@@ -149,20 +149,66 @@ const replacingRules = [
   }
 ]
 
-module.exports = (
-  // will be used by eval()
-  componentName,
-  componentProperties,
-  collection = {}
-) => {
-  const componentTemplate = fs.readFileSync('./template/reactComponent.js')
-  return replacingRules.reduce(
-    (contentString, { pattern, replaceFunction, parameters }) =>
-      contentString.replace(
-        // string.prototype.replace(string, string)
-        pattern,
-        replaceFunction(...parameters.map(param => eval(param)))
-      ),
-    `${componentTemplate}`
-  )
+module.exports = {
+  reactComponent: (
+    // will be used by eval()
+    componentName,
+    componentProperties,
+    collection = {}
+  ) => {
+    const componentTemplate = fs.readFileSync('./template/reactComponent.js')
+    return replacingRules.reduce(
+      (contentString, { pattern, replaceFunction, parameters }) =>
+        contentString.replace(
+          // string.prototype.replace(string, string)
+          pattern,
+          replaceFunction(...parameters.map(param => eval(param)))
+        ),
+      `${componentTemplate}`
+    )
+  },
+  componentIndex: componentsNames => {
+    return `${fs.readFileSync('./template/componentIndex.js')}`
+      .replace(
+        '/* import */',
+        componentsNames.map(name => `import ${name} from './${name}'`).join('\n')
+      )
+      .replace('/* named export */', `export {${componentsNames.join(',')}}`)
+      .replace('/* default export */', `export default ${componentsNames[0]}`)
+  },
+  selectors: selectorCollection => {
+    if (!selectorCollection || !selectorCollection.length) {
+      return '// no selector in this app'
+    } else {
+      return [...new Set(selectorCollection)]
+        .map(
+          selector =>
+            `export const ${selector} = (state) => {
+            // haven't defined yet
+          }`
+        )
+        .join('\n\n')
+    }
+  },
+  actionCreators: actionCreatorCollection => {
+    if (!actionCreatorCollection.length) {
+      return '// no actionCreator in this app'
+    } else {
+      return actionCreatorCollection
+        .map(actionCreator => `export const ${actionCreator} = (state) => ({type: 'unknown'})`)
+        .join('\n\n')
+    }
+  },
+  classes: customedClassName => {
+    return `${fs.readFileSync('./template/classes.js')}`.replace(
+      /\$TM_FILENAME_BASE/gi,
+      `${customedClassName}`
+    )
+  },
+  store: customedClassName => {
+    return `${fs.readFileSync('./template/store.js')}`.replace(
+      /\$TM_FILENAME_BASE/gi,
+      `${customedClassName}`
+    )
+  }
 }

@@ -8,7 +8,8 @@ const { setting_outputFolderName, setting_prettierConfig } = require('./envSetti
 
 const collection = {
   selectorName: [],
-  actionCreatorName: []
+  actionCreatorName: [],
+  componentName:[]
 }
 const exist = {
   folder: {
@@ -46,7 +47,8 @@ const create = {
         componentProperties.childComponentNames = childComponents.map(
           ([componentName, componentProperties]) => componentName.replace('__C', '')
         )
-
+        // 收集 componentName
+        collection.componentName.push(componentName)
         // 写入文件
         const file = `${currentPath}/${componentName}.js`
         const formattedContent = prettier.format(
@@ -62,6 +64,15 @@ const create = {
           )
         }
       }
+    },
+
+    componentIndex(){
+      const file =  `./${setting_outputFolderName}/components/index.js`
+      const formattedContent = prettier.format(
+        contentRule.componentIndex(collection.componentName),
+        setting_prettierConfig
+      )
+      fs.writeFileSync(file, formattedContent)
     },
 
     selector() {
@@ -110,6 +121,7 @@ if (!exist.folder.output()) {
 
 // create|cover file
 create.files.reactComponent(appStructure.components)
+create.files.componentIndex()
 create.files.selector()
 create.files.actionCreator()
 if (appStructure.data.classes && !exist.folder.classes()) {

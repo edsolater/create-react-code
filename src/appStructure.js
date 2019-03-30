@@ -37,7 +37,7 @@ module.exports = {
           user: 'getUser',
           haha: 'getHaha'
         },
-        mapDispatch: ['getAction']
+        mapDispatch: ['getAction'] //也可以是纯字符串
       },
       ShelfBoard__C: {
         mapState: {
