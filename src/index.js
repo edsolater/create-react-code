@@ -10,10 +10,19 @@ const collection = {
   selectorName: [],
   actionCreatorName: []
 }
-
+const exist = {
+  folder: {
+    output() {
+      return fs.existsSync(`./${setting_outputFolderName}`)
+    },
+    classes() {
+      return fs.existsSync(`./${setting_outputFolderName}/data/classes`)
+    }
+  }
+}
 const create = {
   folder: {
-    root() {
+    output() {
       fs.mkdirSync(`./${setting_outputFolderName}`)
     },
     reactComponents() {
@@ -46,7 +55,7 @@ const create = {
         )
         fs.writeFileSync(file, formattedContent)
 
-        // 递归地创造子组件
+        // 追加处理：递归地创造子组件
         if (childComponents.length) {
           childComponents.forEach(([componentName, componentProperties]) =>
             create.files.reactComponent({ [componentName]: componentProperties })
@@ -75,7 +84,7 @@ const create = {
 
     classes() {
       for (customedClassName of appStructure.data.class) {
-        const file = `./${setting_outputFolderName}/data/class/${customedClassName}.js`
+        const file = `./${setting_outputFolderName}/data/classes/${customedClassName}.js`
         const formattedContent = prettier.format(
           contentRule.classes(customedClassName),
           setting_prettierConfig
@@ -93,8 +102,8 @@ const create = {
 }
 
 // create system floder
-if (!fs.existsSync(`./${setting_outputFolderName}`)) {
-  create.folder.root()
+if (!exist.folder.output()) {
+  create.folder.output()
   create.folder.reactComponents()
   create.folder.data()
 }
@@ -103,8 +112,8 @@ if (!fs.existsSync(`./${setting_outputFolderName}`)) {
 create.files.reactComponent(appStructure.components)
 create.files.selector()
 create.files.actionCreator()
-if (appStructure.data.class && !fs.existsSync(`./${setting_outputFolderName}/data/class`)) {
-  fs.mkdirSync(`./${setting_outputFolderName}/data/class`)
+if (appStructure.data.classes && !exist.folder.classes()) {
+  create.folder.classes()
   create.files.classes()
 }
 create.files.store()
