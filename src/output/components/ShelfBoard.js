@@ -2,9 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
+import { getUser, getHaha } from '../data/selectors'
+
 const Wrapper = styled.div``
 
-const ShelfBoard = ({}) => {
+const ShelfBoard = ({ user, haha }) => {
   return (
     <Wrapper className="ShelfBoard">
       {/* use material-ui coreMain::startTag */}
@@ -15,7 +17,10 @@ const ShelfBoard = ({}) => {
   )
 }
 
-const mapState = (state) => ({})
+const mapState = (state) => ({
+  user: getUser(state),
+  haha: getHaha(state)
+})
 const mapDispatch = {}
 
 export default connect(

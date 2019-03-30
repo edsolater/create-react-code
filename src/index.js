@@ -2,14 +2,11 @@
 const fs = require('fs')
 const prettier = require('prettier')
 
-const replacingRules = require('./settings/replacingRules')
+const contentRule = require('./contentRule')
 const appStructure = require('./appStructure')
-const {
-  setting_outputFolderName,
-  setting_prettierConfig
-} = require('./settings/envSetting')
+const { setting_outputFolderName, setting_prettierConfig } = require('./envSetting')
 
-const collaction_selectorName = []
+const collection_selectorName = ['hello']
 const collection_actionCreatorName = []
 
 const create = {
@@ -28,13 +25,7 @@ const create = {
     }
   },
   files: {
-    /**
-     * @description create file selectors
-     */
-    reactComponents(
-      partOfTree,
-      currentPath = `./${setting_outputFolderName}/components`
-    ) {
+    reactComponents(partOfTree, currentPath = `./${setting_outputFolderName}/components`) {
       /**
        *
        * @param {string} componentName component's name
@@ -48,22 +39,12 @@ const create = {
         componentProperties
       ) {
         const componentTemplate = fs.readFileSync('./template/reactComponent.js')
-        return replacingRules.component.rules.reduce(
-          (contentString, { pattern, replaceFunction, componentKey }) =>
+        return contentRule.reactComponent.reduce(
+          (contentString, { pattern, replaceFunction, parameters }) =>
             contentString.replace(
               // string.prototype.replace(string, string)
               pattern,
-              replaceFunction(
-                eval(
-                  componentKey
-                    .map(param =>
-                      param === 'componentName'
-                        ? 'componentName' // 如果需要传参 componentName ,则不附上前缀
-                        : `componentProperties.${param}`
-                    )
-                    .join(',')
-                )
-              )
+              replaceFunction(...parameters.map(param => eval(param)))
             ),
           `${componentTemplate}`
         )
@@ -96,42 +77,30 @@ const create = {
       }
     },
 
-    /**
-     * @description create file selectors
-     */
     selector() {
       const file = `./${setting_outputFolderName}/data/selectors.js`
       const formattedContent = prettier.format(
-        replacingRules.selector.generateContentBy(collaction_selectorName),
+        contentRule.selectors(collection_selectorName),
         setting_prettierConfig
       )
       fs.writeFileSync(file, formattedContent)
     },
 
-    /**
-     * @description create file actionCreators
-     */
     actionCreator() {
       const file = `./${setting_outputFolderName}/data/actionCreators.js`
       const formattedContent = prettier.format(
-        replacingRules.actionCreator.generateContentBy(collection_actionCreatorName),
+        contentRule.actionCreators(collection_actionCreatorName),
         setting_prettierConfig
       )
       fs.writeFileSync(file, formattedContent)
     },
 
-    /**
-     * @description create file actionCreators
-     */
     classes() {
       // TODO: 逻辑仿照 createFileComponents 的
       function createContent(customedClassName) {
         const customedClassTemplate = fs.readFileSync('./template/customedClasses.js')
         // 利用 ruduce()，应用所有的替换规则
-        return `${customedClassTemplate}`.replace(
-          /\$TM_FILENAME_BASE/gi,
-          `${customedClassName}`
-        )
+        return `${customedClassTemplate}`.replace(/\$TM_FILENAME_BASE/gi, `${customedClassName}`)
       }
       for (customedClassName of appStructure.data.class) {
         const file = `./${setting_outputFolderName}/data/class/${customedClassName}`
@@ -141,6 +110,10 @@ const create = {
         )
         fs.writeFileSync(file, formattedContent)
       }
+    },
+
+    store() {
+      // TODO
     }
   }
 }

@@ -2,6 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
+import { selector1, selector2 } from '../data/selectors'
+
 import UserBoards from './UserBoards'
 import ShelfBoard from './ShelfBoard'
 

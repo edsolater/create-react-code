@@ -1,1 +1,1 @@
-// no actionCreator in this app
+export const getAction = (state) => ({ type: 'unknown' })

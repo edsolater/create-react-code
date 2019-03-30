@@ -23,10 +23,10 @@ module.exports = {
       UserBoards__C: {
         type: 'tab', //TODO: tab friendly template
         wrapperType: 'section',
-        materialUI:{
-          coreMain:'paper_white',//需要把但个字符串包裹数组以方便解析
-          coreOthers:'button',
-          icons:'add'
+        materialUI: {
+          coreMain: 'paper_white', //需要把但个字符串包裹数组以方便解析
+          coreOthers: 'button',
+          icons: 'add'
         },
         style: {
           width: 100,
@@ -39,7 +39,12 @@ module.exports = {
         },
         mapDispatch: ['getAction']
       },
-      ShelfBoard__C: true
+      ShelfBoard__C: {
+        mapState: {
+          user: 'getUser',
+          haha: 'getHaha'
+        }
+      }
     }
   },
   data: {
