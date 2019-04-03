@@ -10,164 +10,183 @@ const preprocessing = {
     return `${preprocessing.toPascalCase(string)}Icon`
   }
 }
-const replacingRules = [
-  // example: {
-  //   pattern: '/* placeholderName*/',
-  //   replaceFunction(){},
-  //   parameters:['parameter']
-  //   }
-
-  // component's name
-  {
-    pattern: /\$TM_FILENAME_BASE/g,
-    replaceFunction: componentName => componentName,
-    parameters: ['componentName']
-  },
-  // import material-ui core
-  {
-    pattern: '/* import material-ui core */',
-    replaceFunction: ({ coreMain, coreOthers } = {}) => {
-      let cores = []
-      if (coreMain) cores.push(coreMain)
-      if (coreOthers) cores.push(...preprocessing.stringToArray(coreOthers))
-      if (cores.length) {
-        return `// 👇:material-ui core
-            import {${cores.map(preprocessing.toPascalCase)}} from '@material-ui/core'`
-      } else {
-        return ''
+// 对生成组件使用的规则
+const componentFileReplacingRules = [
+  // 与 component name 相关的替换规则
+  [
+    {
+      pattern: /\$TM_FILENAME_BASE/g,
+      replaceFunction: componentName => componentName,
+      parameters: ['componentName']
+    }
+  ],
+  // 与 material_ui 相关的替换规则
+  [
+    // material-ui/core
+    [
+      /* import material-ui core */
+      {
+        pattern: '/* import material-ui core */',
+        replaceFunction: ({ coreMain, coreOthers } = {}) => {
+          let cores = []
+          if (coreMain) cores.push(coreMain)
+          if (coreOthers) cores.push(...preprocessing.stringToArray(coreOthers))
+          if (cores.length) {
+            return `import {${cores.map(
+              preprocessing.toPascalCase
+            )}} from '@material-ui/core'`
+          } else {
+            return ''
+          }
+        },
+        parameters: ['componentProperties.materialUI']
+      },
+      /* use material-ui coreMain::startTag */
+      {
+        pattern: '{/* use material-ui coreMain::startTag */}',
+        replaceFunction: ({ coreMain } = {}) =>
+          coreMain ? `<${preprocessing.stringToArray(coreMain)}>` : '',
+        parameters: ['componentProperties.materialUI']
+      },
+      /* use material-ui coreMain::endTag */
+      {
+        pattern: '{/* use material-ui coreMain::endTag */}',
+        replaceFunction: ({ coreMain } = {}) =>
+          coreMain ? `</${preprocessing.stringToArray(coreMain)}>` : '',
+        parameters: ['componentProperties.materialUI']
       }
-    },
-    parameters: ['componentProperties.materialUI']
-  },
-  /* use material-ui coreMain::startTag */
-  {
-    pattern: '{/* use material-ui coreMain::startTag */}',
-    replaceFunction: ({ coreMain } = {}) =>
-      coreMain ? `<${preprocessing.stringToArray(coreMain)}>` : '',
-    parameters: ['componentProperties.materialUI']
-  },
-  /* use material-ui coreMain::endTag */
-  {
-    pattern: '{/* use material-ui coreMain::endTag */}',
-    replaceFunction: ({ coreMain } = {}) =>
-      coreMain ? `</${preprocessing.stringToArray(coreMain)}>` : '',
-    parameters: ['componentProperties.materialUI']
-  },
-  // import material-ui icons
-  {
-    pattern: '/* import material-ui icons */',
-    replaceFunction: ({ icons } = {}) => {
-      icons = preprocessing.stringToArray(icons)
-      if (icons.length) {
-        return `// 👇:material-ui icons
-            import {${icons.map(preprocessing.suffixIconName)}} from '@material-ui/icons'`
-      } else {
-        return ''
+    ],
+    // material-ui/icons
+    [
+      {
+        pattern: '/* import material-ui icons */',
+        replaceFunction: ({ icons } = {}) => {
+          icons = preprocessing.stringToArray(icons)
+          if (icons.length) {
+            return `import {${icons.map(
+              preprocessing.suffixIconName
+            )}} from '@material-ui/icons'`
+          } else {
+            return ''
+          }
+        },
+        parameters: ['componentProperties.materialUI']
       }
+    ]
+  ],
+  // 与 childComponent 相关的替换规则
+  [
+    // import child components
+    {
+      pattern: '/* import child components */',
+      replaceFunction: (childComponentNames = []) =>
+        childComponentNames.length
+          ? `import {${childComponentNames.join(',')}} from '../components'`
+          : '',
+      parameters: ['componentProperties.childComponentNames']
     },
-    parameters: ['componentProperties.materialUI']
-  },
-  // import child components
-  {
-    pattern: '/* import child components */',
-    replaceFunction: (childComponentNames = []) =>
-      childComponentNames.length
-        ? `import {${childComponentNames.join(',')}} from '../components'`
-        : '',
-    parameters: ['componentProperties.childComponentNames']
-  },
-  // use child components
-  {
-    pattern: '{/* use child components */}',
-    replaceFunction: (childComponentNames = []) =>
-      childComponentNames.map(childName => `<${childName} />\n`).join(''),
-    parameters: ['componentProperties.childComponentNames']
-  },
-  // import selectors
-  {
-    pattern: '/* import selectors */',
-    replaceFunction: (mapState = {}, collection_selectorName = []) => {
-      collection_selectorName.push(...Object.values(mapState))
-      if (Object.entries(mapState).length) {
-        return `import {${Object.values(mapState)}} from '../data/selectors'`
-      } else {
-        return ''
-      }
+    // use child components
+    {
+      pattern: '{/* use child components */}',
+      replaceFunction: (childComponentNames = []) =>
+        childComponentNames.map(childName => `<${childName} />\n`).join(''),
+      parameters: ['componentProperties.childComponentNames']
+    }
+  ],
+  // 与 selectors 相关的替换规则
+  [
+    // import selectors
+    {
+      pattern: '/* import selectors */',
+      replaceFunction: (mapState = {}, collection_selectorName = []) => {
+        collection_selectorName.push(...Object.values(mapState))
+        if (Object.entries(mapState).length) {
+          return `import {${Object.values(mapState)}} from '../data/selectors'`
+        } else {
+          return ''
+        }
+      },
+      parameters: ['componentProperties.mapState', 'collection.selectorName']
     },
-    parameters: ['componentProperties.mapState', 'collection.selectorName']
-  },
-  // set mapState with selectors
-  {
-    pattern: '/* set mapState with selectors */',
-    replaceFunction: (mapState = {}) => `const mapState = (state) => ({
+    // set mapState with selectors
+    {
+      pattern: '/* set mapState with selectors */',
+      replaceFunction: (mapState = {}) => `const mapState = (state) => ({
         ${Object.entries(mapState).map(
           ([prop, selector]) => `${prop}: ${selector}(state)`
         )}
       })`,
-    parameters: ['componentProperties.mapState']
-  },
-  // get mapState Props
-  {
-    pattern: '/* get mapState Props */',
-    replaceFunction: (mapState = {}) => {
-      if (Object.entries(mapState).length) {
-        return `${Object.keys(mapState)},`
-      } else {
-        return ''
-      }
+      parameters: ['componentProperties.mapState']
     },
-    parameters: ['componentProperties.mapState']
-  },
-  // import actionCreators
-  {
-    pattern: '\n/* import actionCreators */',
-    replaceFunction: (mapDispatch = [], actionCreatorCollection = []) => {
-      mapDispatch = preprocessing.stringToArray(mapDispatch)
-      actionCreatorCollection.push(...mapDispatch)
-      if (mapDispatch.length) {
-        return `import {${mapDispatch}} from '../data/actionCreators'`
-      } else {
-        return ''
-      }
+    // get mapState Props
+    {
+      pattern: '/* get mapState Props */',
+      replaceFunction: (mapState = {}) => {
+        if (Object.entries(mapState).length) {
+          return `${Object.keys(mapState)},`
+        } else {
+          return ''
+        }
+      },
+      parameters: ['componentProperties.mapState']
+    }
+  ],
+  // 与 actionCreators 相关的替换规则
+  [
+    // import actionCreators
+    {
+      pattern: '\n/* import actionCreators */',
+      replaceFunction: (mapDispatch = [], actionCreatorCollection = []) => {
+        mapDispatch = preprocessing.stringToArray(mapDispatch)
+        actionCreatorCollection.push(...mapDispatch)
+        if (mapDispatch.length) {
+          return `import {${mapDispatch}} from '../data/actionCreators'`
+        } else {
+          return ''
+        }
+      },
+      parameters: ['componentProperties.mapDispatch', 'collection.actionCreatorName']
     },
-    parameters: ['componentProperties.mapDispatch', 'collection.actionCreatorName']
-  },
-  // set mapDispatch with actionCreators
-  {
-    pattern: '/* set mapDispatch with actionCreators */',
-    replaceFunction: (mapDispatch = []) => `const mapDispatch = {${mapDispatch}}`,
-    parameters: ['componentProperties.mapDispatch']
-  },
-  // get mapDispatch Props
-  {
-    pattern: '/* get mapDispatch Props */',
-    replaceFunction: (mapDispatch = []) => {
-      if (mapDispatch.length) {
-        return `${mapDispatch}`
-      } else {
-        return ''
-      }
+    // set mapDispatch with actionCreators
+    {
+      pattern: '/* set mapDispatch with actionCreators */',
+      replaceFunction: (mapDispatch = []) => `const mapDispatch = {${mapDispatch}}`,
+      parameters: ['componentProperties.mapDispatch']
     },
-    parameters: ['componentProperties.mapDispatch']
-  },
-  // wrapperType
-  {
-    pattern: '/* wrapperType */ div',
-    replaceFunction: (wrapperType = 'div') => wrapperType,
-    parameters: ['componentProperties.wrapperType']
-  },
-  // style
-  {
-    pattern: '/* style */',
-    replaceFunction: (style = {}) =>
-      Object.entries(style)
-        .map(([CSSName, CSSValue]) => `${CSSName}: ${CSSValue};`)
-        .join('\n'),
-    parameters: ['componentProperties.style']
-  }
+    // get mapDispatch Props
+    {
+      pattern: '/* get mapDispatch Props */',
+      replaceFunction: (mapDispatch = []) => {
+        if (mapDispatch.length) {
+          return `${mapDispatch}`
+        } else {
+          return ''
+        }
+      },
+      parameters: ['componentProperties.mapDispatch']
+    }
+  ],
+  // styled_components
+  [
+    // wrapperType
+    {
+      pattern: '/* wrapperType */ div',
+      replaceFunction: (wrapperType = 'div') => wrapperType,
+      parameters: ['componentProperties.wrapperType']
+    },
+    // style
+    {
+      pattern: '/* style */',
+      replaceFunction: (style = {}) =>
+        Object.entries(style)
+          .map(([CSSName, CSSValue]) => `${CSSName}: ${CSSValue};`)
+          .join('\n'),
+      parameters: ['componentProperties.style']
+    }
+  ]
 ]
 
-module.exports = {
+const contentRules = {
   componentFile: (
     // will be used by eval()
     componentName,
@@ -175,15 +194,17 @@ module.exports = {
     collection = {}
   ) => {
     const componentTemplate = fs.readFileSync('./template/componentFile.js')
-    return replacingRules.reduce(
-      (contentString, { pattern, replaceFunction, parameters }) =>
-        contentString.replace(
-          // string.prototype.replace(string, string)
-          pattern,
-          replaceFunction(...parameters.map(param => eval(param)))
-        ),
-      `${componentTemplate}`
-    )
+    return Object.values(componentFileReplacingRules)
+      .flat(2)
+      .reduce(
+        (contentString, { pattern, replaceFunction, parameters }) =>
+          contentString.replace(
+            // string.prototype.replace(string, string)
+            pattern,
+            replaceFunction(...parameters.map(param => eval(param)))
+          ),
+        `${componentTemplate}`
+      )
   },
   componentIndex: componentsNames => {
     return `${fs.readFileSync('./template/componentIndex.js')}`
@@ -233,3 +254,5 @@ module.exports = {
     )
   }
 }
+
+module.exports = contentRules

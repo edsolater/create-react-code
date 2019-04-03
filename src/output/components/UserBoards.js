@@ -1,9 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-// 👇:material-ui core
+
 import { PaperWhite, Button } from '@material-ui/core'
-// 👇:material-ui icons
 import { AddIcon } from '@material-ui/icons'
 
 import { getUser, getHaha } from '../data/selectors'
