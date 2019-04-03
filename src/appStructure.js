@@ -54,7 +54,7 @@ module.exports = {
   },
   data: {
     classes: ['Board', 'Item'],
-    reducers: ['items', 'shelfBoard', 'userBoard'] //TODO
+    reducers: ['items', 'shelfBoard', 'userBoard'] //TODO: 先做了 redux-reducers 才能做 redux-store
     // auto generate actionCreators.js
     // auto generate selectors.js
     // auto generate store.js //TODO

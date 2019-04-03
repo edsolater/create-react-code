@@ -218,7 +218,7 @@ const componentFileReplacingRules = [
   ]
 ]
 
-const contentRules = {
+const content = {
   componentFile: (
     // will be used by eval()
     componentName,
@@ -245,6 +245,53 @@ const contentRules = {
       
       export {${componentsNames.join(',')}}
       export default ${componentsNames[0]}
+    `
+  },
+  outputIndex: () => {
+    return `
+      import React from 'react'
+      import ReactDOM from 'react-dom'
+      import './initialize_browser_css.css'
+      import './initialize_material-ui'
+      import App from './components'
+      
+      ReactDOM.render(<App />, document.getElementById('root'))
+  `
+  },
+  initialize_browser_css: () => {
+    return `
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }  
+  `
+  },
+  initialize_material_ui: () => {
+    return `
+      import { install } from '@material-ui/styles'
+      install() // switches the styling engine the core components use.
+  `
+  },
+  reducerFile: reducerName => {
+    return `
+      export default (state = {}, action = {}) => {
+        switch (action.type) {
+          case '${reducerName}_main'.toUpperCase(): {
+          }
+          default:
+            return state
+        }
+      }
+    `
+  },
+  reducerIndex: reducerNames => {
+    return `
+      import { combineReducers } from 'redux'
+      ${reducerNames.map(reducerName => `import ${reducerName} from './${reducerName}'`).join('\n')}
+      export default combineReducers({${reducerNames.join(',')}})
     `
   },
   selectors: selectorCollection => {
@@ -293,35 +340,7 @@ const contentRules = {
       
       export default createStore(rootReducer, initialState)
     `
-  },
-  outputIndex: () => {
-    return `
-      import React from 'react'
-      import ReactDOM from 'react-dom'
-      import './initialize_browser_css.css'
-      import './initialize_material-ui'
-      import App from './components'
-      
-      ReactDOM.render(<App />, document.getElementById('root'))
-  `
-  },
-  initialize_browser_css: () => {
-    return `
-      html,
-      body {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }  
-  `
-  },
-  initialize_material_ui: () => {
-    return `
-      import { install } from '@material-ui/styles'
-      install() // switches the styling engine the core components use.
-  `
   }
 }
 
-module.exports = contentRules
+module.exports = content

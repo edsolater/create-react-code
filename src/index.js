@@ -34,6 +34,9 @@ const create = {
     },
     classes() {
       fs.mkdirSync(`./${setting_outputFolderName}/data/classes`)
+    },
+    reducers() {
+      fs.mkdirSync(`./${setting_outputFolderName}/data/reducers`)
     }
   },
   files: {
@@ -73,6 +76,48 @@ const create = {
       )
       fs.writeFileSync(file, formattedContent)
     },
+    outputIndex() {
+      const file = `./${setting_outputFolderName}/index.js`
+      const formattedContent = prettier.format(
+        contentRule.outputIndex(),
+        setting_prettierConfig
+      )
+      fs.writeFileSync(file, formattedContent)
+    },
+    initialize_browser_css() {
+      const file = `./${setting_outputFolderName}/initialize_browser_css.css`
+      const formattedContent = prettier.format(contentRule.initialize_browser_css(), {
+        ...setting_prettierConfig,
+        parser: 'css'
+      })
+      fs.writeFileSync(file, formattedContent)
+    },
+    initialize_material_ui() {
+      const file = `./${setting_outputFolderName}/initialize_material_ui.js`
+      const formattedContent = prettier.format(
+        contentRule.initialize_material_ui(),
+        setting_prettierConfig
+      )
+      fs.writeFileSync(file, formattedContent)
+    },
+    reducers() {
+      for (const reducerName of appStructure.data.reducers) {
+        const file = `./${setting_outputFolderName}/data/reducers/${reducerName}.js`
+        const formattedContent = prettier.format(
+          contentRule.reducerFile(reducerName),
+          setting_prettierConfig
+        )
+        fs.writeFileSync(file, formattedContent)
+      }
+    },
+    reducerIndex() {
+      const file = `./${setting_outputFolderName}/data/reducers/index.js`
+      const formattedContent = prettier.format(
+        contentRule.reducerIndex(appStructure.data.reducers),
+        setting_prettierConfig
+      )
+      fs.writeFileSync(file, formattedContent)
+    },
     selector() {
       const file = `./${setting_outputFolderName}/data/selectors.js`
       const formattedContent = prettier.format(
@@ -106,30 +151,6 @@ const create = {
         setting_prettierConfig
       )
       fs.writeFileSync(file, formattedContent)
-    },
-    outputIndex() {
-      const file = `./${setting_outputFolderName}/index.js`
-      const formattedContent = prettier.format(
-        contentRule.outputIndex(),
-        setting_prettierConfig
-      )
-      fs.writeFileSync(file, formattedContent)
-    },
-    initialize_browser_css() {
-      const file = `./${setting_outputFolderName}/initialize_browser_css.css`
-      const formattedContent = prettier.format(contentRule.initialize_browser_css(), {
-        ...setting_prettierConfig,
-        parser: 'css'
-      })
-      fs.writeFileSync(file, formattedContent)
-    },
-    initialize_material_ui() {
-      const file = `./${setting_outputFolderName}/initialize_material_ui.js`
-      const formattedContent = prettier.format(
-        contentRule.initialize_material_ui(),
-        setting_prettierConfig
-      )
-      fs.writeFileSync(file, formattedContent)
     }
   }
 }
@@ -139,6 +160,7 @@ if (!exist.folder.output()) {
   create.folder.output()
   create.folder.reactComponents()
   create.folder.data()
+  if (appStructure.data.reducers) create.folder.reducers()
 }
 
 // create|cover file
@@ -147,6 +169,8 @@ create.files.componentIndex()
 create.files.outputIndex()
 create.files.initialize_browser_css()
 create.files.initialize_material_ui()
+create.files.reducers()
+create.files.reducerIndex()
 create.files.selector()
 create.files.actionCreator()
 if (appStructure.data.classes && !exist.folder.classes()) {
