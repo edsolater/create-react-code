@@ -12,7 +12,7 @@ import { getAction } from '../data/actionCreators'
 const Wrapper = styled.section`
   width: 100;
   height: 200;
-  backgroung-color: dodgerBlue;
+  background-color: dodgerBlue;
 `
 const useStyles = makeStyles((theme) => ({
   root: {

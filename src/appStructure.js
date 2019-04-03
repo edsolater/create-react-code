@@ -35,7 +35,7 @@ module.exports = {
         style: {
           width: 100,
           height: 200,
-          'backgroung-color': 'dodgerBlue'
+          'background-color': 'dodgerBlue'
         },
         mapState: {
           user: 'getUser',

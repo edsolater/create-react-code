@@ -108,7 +108,7 @@ const componentFileReplacingRules = [
   ],
   // 与 childComponent 相关的替换规则
   [
-    // import child components
+    // import
     {
       pattern: '/* import child components */',
       replaceFunction: (childComponentNames = []) =>
@@ -117,7 +117,7 @@ const componentFileReplacingRules = [
           : '',
       parameters: ['componentProperties.childComponentNames']
     },
-    // use child components
+    // use
     {
       pattern: '{/* use child components */}',
       replaceFunction: (childComponentNames = []) =>
@@ -273,18 +273,32 @@ const contentRules = {
         .join('\n\n')
     }
   },
-  classes: customedClassName => {
-    return `${fs.readFileSync('./template/classes.js')}`.replace(
+  classes: customedClassName =>
+    `${fs.readFileSync('./template/classes.js')}`.replace(
       /\$TM_FILENAME_BASE/gi,
       `${customedClassName}`
-    )
-  },
+    ),
   store: customedClassName => {
+    // TODO: 这只是占位代码
     return `${fs.readFileSync('./template/store.js')}`.replace(
       /\$TM_FILENAME_BASE/gi,
       `${customedClassName}`
     )
-  }
+  },
+  outputIndex: () => '',
+  initialize_browser_css: () => `
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }  
+  `,
+  initialize_material_ui: () => `
+    import { install } from '@material-ui/styles'
+    install() //the install() function switches the styling engine the core components use.
+  `,
 }
 
 module.exports = contentRules

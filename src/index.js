@@ -9,7 +9,7 @@ const { setting_outputFolderName, setting_prettierConfig } = require('./envSetti
 const collection = {
   selectorName: [],
   actionCreatorName: [],
-  componentName:[]
+  componentName: []
 }
 const exist = {
   folder: {
@@ -41,8 +41,8 @@ const create = {
       for (let [componentName, componentProperties] of Object.entries(partOfTree)) {
         // 预处理：删去组件的标识性前缀 & 智能提取子组件的名字
         componentName = componentName.replace('__C', '')
-        const childComponents = Object.entries(componentProperties).filter(([key, value]) =>
-          key.endsWith('__C')
+        const childComponents = Object.entries(componentProperties).filter(
+          ([key, value]) => key.endsWith('__C')
         )
         componentProperties.childComponentNames = childComponents.map(
           ([componentName, componentProperties]) => componentName.replace('__C', '')
@@ -65,16 +65,14 @@ const create = {
         }
       }
     },
-
-    componentIndex(){
-      const file =  `./${setting_outputFolderName}/components/index.js`
+    componentIndex() {
+      const file = `./${setting_outputFolderName}/components/index.js`
       const formattedContent = prettier.format(
         contentRule.componentIndex(collection.componentName),
         setting_prettierConfig
       )
       fs.writeFileSync(file, formattedContent)
     },
-
     selector() {
       const file = `./${setting_outputFolderName}/data/selectors.js`
       const formattedContent = prettier.format(
@@ -83,7 +81,6 @@ const create = {
       )
       fs.writeFileSync(file, formattedContent)
     },
-
     actionCreator() {
       const file = `./${setting_outputFolderName}/data/actionCreators.js`
       const formattedContent = prettier.format(
@@ -92,7 +89,6 @@ const create = {
       )
       fs.writeFileSync(file, formattedContent)
     },
-
     classes() {
       for (customedClassName of appStructure.data.class) {
         const file = `./${setting_outputFolderName}/data/classes/${customedClassName}.js`
@@ -103,10 +99,36 @@ const create = {
         fs.writeFileSync(file, formattedContent)
       }
     },
-
     store() {
       const file = `./${setting_outputFolderName}/data/store.js`
-      const formattedContent = prettier.format(contentRule.store(), setting_prettierConfig)
+      const formattedContent = prettier.format(
+        contentRule.store(),
+        setting_prettierConfig
+      )
+      fs.writeFileSync(file, formattedContent)
+    },
+    outputIndex() {
+      const file = `./${setting_outputFolderName}/index.js`
+      const formattedContent = prettier.format(
+        contentRule.outputIndex(),
+        setting_prettierConfig
+      )
+      fs.writeFileSync(file, formattedContent)
+    },
+    initialize_browser_css() {
+      const file = `./${setting_outputFolderName}/initialize_browser_css.css`
+      const formattedContent = prettier.format(contentRule.initialize_browser_css(), {
+        ...setting_prettierConfig,
+        parser: 'css'
+      })
+      fs.writeFileSync(file, formattedContent)
+    },
+    initialize_material_ui() {
+      const file = `./${setting_outputFolderName}/initialize_material_ui.js`
+      const formattedContent = prettier.format(
+        contentRule.initialize_material_ui(),
+        setting_prettierConfig
+      )
       fs.writeFileSync(file, formattedContent)
     }
   }
@@ -122,6 +144,9 @@ if (!exist.folder.output()) {
 // create|cover file
 create.files.componentFile(appStructure.components)
 create.files.componentIndex()
+create.files.outputIndex()
+create.files.initialize_browser_css()
+create.files.initialize_material_ui()
 create.files.selector()
 create.files.actionCreator()
 if (appStructure.data.classes && !exist.folder.classes()) {
