@@ -52,8 +52,7 @@ module.exports = {
     }
   },
   data: {
-    //TODO
-    classes: ['Board', 'Item'], //TODO
+    classes: ['Board', 'Item'],
     reducers: ['items', 'shelfBoard', 'userBoard'] //TODO
     // auto generate actionCreators.js
     // auto generate selectors.js

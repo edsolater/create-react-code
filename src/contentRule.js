@@ -285,7 +285,15 @@ const contentRules = {
       `${customedClassName}`
     )
   },
-  outputIndex: () => '',
+  outputIndex: () => `
+    import React from 'react'
+    import ReactDOM from 'react-dom'
+    import './initialize_browser_css.css'
+    import './initialize_material-ui'
+    import App from './components'
+    
+    ReactDOM.render(<App />, document.getElementById('root'))
+  `,
   initialize_browser_css: () => `
     html,
     body {
@@ -297,8 +305,8 @@ const contentRules = {
   `,
   initialize_material_ui: () => `
     import { install } from '@material-ui/styles'
-    install() //the install() function switches the styling engine the core components use.
-  `,
+    install() // switches the styling engine the core components use.
+  `
 }
 
 module.exports = contentRules
