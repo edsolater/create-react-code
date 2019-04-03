@@ -273,11 +273,12 @@ const contentRules = {
         .join('\n\n')
     }
   },
-  classes: customedClassName =>
-    `${fs.readFileSync('./template/classes.js')}`.replace(
+  classes: customedClassName => {
+    return `${fs.readFileSync('./template/classes.js')}`.replace(
       /\$TM_FILENAME_BASE/gi,
       `${customedClassName}`
-    ),
+    )
+  },
   store: customedClassName => {
     // TODO: 这只是占位代码
     return `${fs.readFileSync('./template/store.js')}`.replace(
@@ -285,28 +286,34 @@ const contentRules = {
       `${customedClassName}`
     )
   },
-  outputIndex: () => `
-    import React from 'react'
-    import ReactDOM from 'react-dom'
-    import './initialize_browser_css.css'
-    import './initialize_material-ui'
-    import App from './components'
-    
-    ReactDOM.render(<App />, document.getElementById('root'))
-  `,
-  initialize_browser_css: () => `
-    html,
-    body {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }  
-  `,
-  initialize_material_ui: () => `
-    import { install } from '@material-ui/styles'
-    install() // switches the styling engine the core components use.
+  outputIndex: () => {
+    return `
+      import React from 'react'
+      import ReactDOM from 'react-dom'
+      import './initialize_browser_css.css'
+      import './initialize_material-ui'
+      import App from './components'
+      
+      ReactDOM.render(<App />, document.getElementById('root'))
   `
+  },
+  initialize_browser_css: () => {
+    return `
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }  
+  `
+  },
+  initialize_material_ui: () => {
+    return `
+      import { install } from '@material-ui/styles'
+      install() // switches the styling engine the core components use.
+  `
+  }
 }
 
 module.exports = contentRules
