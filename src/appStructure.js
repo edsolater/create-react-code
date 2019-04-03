@@ -25,6 +25,10 @@ module.exports = {
         wrapperType: 'section',
         materialUI: {
           coreMain: 'paper_white', //需要把但个字符串包裹数组以方便解析
+          coreMainStyle: `
+            width: 10 * theme.spacing.unit,
+            height: 10 * theme.spacing.unit
+          `,
           coreOthers: 'button',
           icons: 'add'
         },

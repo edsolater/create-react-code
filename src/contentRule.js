@@ -87,10 +87,12 @@ const componentFileReplacingRules = [
       /* set material-ui style */
       {
         pattern: '/* set material-ui style */',
-        replaceFunction: ({ coreMain } = {}) =>
+        replaceFunction: ({ coreMain, coreMainStyle } = {}) =>
           coreMain
             ? `const useStyles = makeStyles(theme => ({
-                root: {}
+                root: {
+                  ${coreMainStyle || ''}
+                }
               }))`
             : '',
         parameters: ['componentProperties.materialUI']

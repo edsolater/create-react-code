@@ -15,10 +15,15 @@ const Wrapper = styled.section`
   backgroung-color: dodgerBlue;
 `
 const useStyles = makeStyles((theme) => ({
-  root: {}
+  root: {
+    width: 10 * theme.spacing.unit,
+    height: 10 * theme.spacing.unit
+  }
 }))
 
 const UserBoards = ({ user, haha, getAction }) => {
+  const classes = useStyles()
+
   return (
     <Wrapper className="UserBoards">
       <PaperWhite className={classes.root}>
