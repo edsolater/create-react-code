@@ -10,12 +10,9 @@ const Wrapper = styled.div``
 const Parent = ({ hello, hei }) => {
   return (
     <Wrapper className="Parent">
-      {/* use material-ui coreMain::startTag */}
       <span>this is Parent</span>
       <UserBoards />
       <ShelfBoard />
-
-      {/* use material-ui coreMain::endTag */}
     </Wrapper>
   )
 }

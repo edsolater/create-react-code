@@ -9,10 +9,7 @@ const Wrapper = styled.div``
 const ShelfBoard = ({ user, haha }) => {
   return (
     <Wrapper className="ShelfBoard">
-      {/* use material-ui coreMain::startTag */}
       <span>this is ShelfBoard</span>
-
-      {/* use material-ui coreMain::endTag */}
     </Wrapper>
   )
 }

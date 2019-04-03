@@ -39,6 +39,20 @@ const replacingRules = [
     },
     parameters: ['componentProperties.materialUI']
   },
+  /* use material-ui coreMain::startTag */
+  {
+    pattern: '{/* use material-ui coreMain::startTag */}',
+    replaceFunction: ({ coreMain } = {}) =>
+      coreMain ? `<${preprocessing.stringToArray(coreMain)}>` : '',
+    parameters: ['componentProperties.materialUI']
+  },
+  /* use material-ui coreMain::endTag */
+  {
+    pattern: '{/* use material-ui coreMain::endTag */}',
+    replaceFunction: ({ coreMain } = {}) =>
+      coreMain ? `</${preprocessing.stringToArray(coreMain)}>` : '',
+    parameters: ['componentProperties.materialUI']
+  },
   // import material-ui icons
   {
     pattern: '/* import material-ui icons */',
@@ -57,7 +71,9 @@ const replacingRules = [
   {
     pattern: '/* import child components */',
     replaceFunction: (childComponentNames = []) =>
-      childComponentNames.length ? `import {${childComponentNames.join(',')}} from '../components'` : '',
+      childComponentNames.length
+        ? `import {${childComponentNames.join(',')}} from '../components'`
+        : '',
     parameters: ['componentProperties.childComponentNames']
   },
   // use child components
@@ -84,7 +100,9 @@ const replacingRules = [
   {
     pattern: '/* set mapState with selectors */',
     replaceFunction: (mapState = {}) => `const mapState = (state) => ({
-        ${Object.entries(mapState).map(([prop, selector]) => `${prop}: ${selector}(state)`)}
+        ${Object.entries(mapState).map(
+          ([prop, selector]) => `${prop}: ${selector}(state)`
+        )}
       })`,
     parameters: ['componentProperties.mapState']
   },
@@ -150,13 +168,13 @@ const replacingRules = [
 ]
 
 module.exports = {
-  reactComponent: (
+  componentFile: (
     // will be used by eval()
     componentName,
     componentProperties,
     collection = {}
   ) => {
-    const componentTemplate = fs.readFileSync('./template/reactComponent.js')
+    const componentTemplate = fs.readFileSync('./template/componentFile.js')
     return replacingRules.reduce(
       (contentString, { pattern, replaceFunction, parameters }) =>
         contentString.replace(
@@ -195,7 +213,10 @@ module.exports = {
       return '// no actionCreator in this app'
     } else {
       return actionCreatorCollection
-        .map(actionCreator => `export const ${actionCreator} = (state) => ({type: 'unknown'})`)
+        .map(
+          actionCreator =>
+            `export const ${actionCreator} = (state) => ({type: 'unknown'})`
+        )
         .join('\n\n')
     }
   },

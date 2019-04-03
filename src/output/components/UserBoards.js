@@ -18,10 +18,9 @@ const Wrapper = styled.section`
 const UserBoards = ({ user, haha, getAction }) => {
   return (
     <Wrapper className="UserBoards">
-      {/* use material-ui coreMain::startTag */}
-      <span>this is UserBoards</span>
-
-      {/* use material-ui coreMain::endTag */}
+      <paper_white>
+        <span>this is UserBoards</span>
+      </paper_white>
     </Wrapper>
   )
 }

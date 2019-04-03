@@ -37,7 +37,7 @@ const create = {
     }
   },
   files: {
-    reactComponent(partOfTree, currentPath = `./${setting_outputFolderName}/components`) {
+    componentFile(partOfTree, currentPath = `./${setting_outputFolderName}/components`) {
       for (let [componentName, componentProperties] of Object.entries(partOfTree)) {
         // 预处理：删去组件的标识性前缀 & 智能提取子组件的名字
         componentName = componentName.replace('__C', '')
@@ -52,7 +52,7 @@ const create = {
         // 写入文件
         const file = `${currentPath}/${componentName}.js`
         const formattedContent = prettier.format(
-          contentRule.reactComponent(componentName, componentProperties, collection),
+          contentRule.componentFile(componentName, componentProperties, collection),
           setting_prettierConfig
         )
         fs.writeFileSync(file, formattedContent)
@@ -60,7 +60,7 @@ const create = {
         // 追加处理：递归地创造子组件
         if (childComponents.length) {
           childComponents.forEach(([componentName, componentProperties]) =>
-            create.files.reactComponent({ [componentName]: componentProperties })
+            create.files.componentFile({ [componentName]: componentProperties })
           )
         }
       }
@@ -120,7 +120,7 @@ if (!exist.folder.output()) {
 }
 
 // create|cover file
-create.files.reactComponent(appStructure.components)
+create.files.componentFile(appStructure.components)
 create.files.componentIndex()
 create.files.selector()
 create.files.actionCreator()
