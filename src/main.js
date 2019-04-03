@@ -2,7 +2,7 @@
 const fs = require('fs')
 const prettier = require('prettier')
 
-const contentRule = require('./contentRule')
+const contentRule = require('./setContent')
 const appStructure = require('./appStructure')
 const { setting_outputFolderName, setting_prettierConfig } = require('./envSetting')
 
@@ -90,7 +90,7 @@ const create = {
       fs.writeFileSync(file, formattedContent)
     },
     classes() {
-      for (customedClassName of appStructure.data.class) {
+      for (customedClassName of appStructure.data.classes) {
         const file = `./${setting_outputFolderName}/data/classes/${customedClassName}.js`
         const formattedContent = prettier.format(
           contentRule.classes(customedClassName),

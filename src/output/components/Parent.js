@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { UserBoards, ShelfBoard } from '../components'
+import { UserBoards, ShelfBoard, Another } from '../components'
 import { selector1, selector2 } from '../data/selectors'
 
 const Wrapper = styled.div``
@@ -10,9 +10,10 @@ const Wrapper = styled.div``
 const Parent = ({ hello, hei }) => {
   return (
     <Wrapper className="Parent">
-      <span>this is Parent</span>
+      unmodified
       <UserBoards />
       <ShelfBoard />
+      <Another />
     </Wrapper>
   )
 }

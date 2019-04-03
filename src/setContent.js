@@ -225,7 +225,7 @@ const contentRules = {
     componentProperties,
     collection = {}
   ) => {
-    const componentTemplate = fs.readFileSync('./template/componentFile.js')
+    const componentTemplate = fs.readFileSync('./componentTemplate.js')
     return Object.values(componentFileReplacingRules)
       .flat(2)
       .reduce(
@@ -239,13 +239,13 @@ const contentRules = {
       )
   },
   componentIndex: componentsNames => {
-    return `${fs.readFileSync('./template/componentIndex.js')}`
-      .replace(
-        '/* import */',
-        componentsNames.map(name => `import ${name} from './${name}'`).join('\n')
-      )
-      .replace('/* named export */', `export {${componentsNames.join(',')}}`)
-      .replace('/* default export */', `export default ${componentsNames[0]}`)
+    return `
+      import React from 'react'
+      ${componentsNames.map(name => `import ${name} from './${name}'`).join('\n')}
+      
+      export {${componentsNames.join(',')}}
+      export default ${componentsNames[0]}
+    `
   },
   selectors: selectorCollection => {
     if (!selectorCollection || !selectorCollection.length) {
@@ -274,17 +274,25 @@ const contentRules = {
     }
   },
   classes: customedClassName => {
-    return `${fs.readFileSync('./template/classes.js')}`.replace(
-      /\$TM_FILENAME_BASE/gi,
-      `${customedClassName}`
-    )
+    return `
+      export default class ${customedClassName} {
+        constructor() {}
+      }
+      window.${customedClassName} = ${customedClassName}
+    `
   },
-  store: customedClassName => {
+  store: () => {
     // TODO: 这只是占位代码
-    return `${fs.readFileSync('./template/store.js')}`.replace(
-      /\$TM_FILENAME_BASE/gi,
-      `${customedClassName}`
-    )
+    return `
+      import { createStore } from 'redux'
+      import rootReducer from './reducers'
+      
+      const initialState = {
+        /* initialState */
+      }
+      
+      export default createStore(rootReducer, initialState)
+    `
   },
   outputIndex: () => {
     return `

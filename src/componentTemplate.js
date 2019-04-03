@@ -25,7 +25,7 @@ const $TM_FILENAME_BASE = (
   return (
     <Wrapper className="$TM_FILENAME_BASE">
       {/* use material-ui coreMain::startTag */}
-      <span>this is $TM_FILENAME_BASE</span>
+      unmodified
       {/* use child components */}
       {/* use material-ui coreMain::endTag */}
     </Wrapper>

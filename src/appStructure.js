@@ -48,7 +48,8 @@ module.exports = {
           user: 'getUser',
           haha: 'getHaha'
         }
-      }
+      },
+      Another__C: true,
     }
   },
   data: {

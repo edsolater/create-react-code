@@ -7,11 +7,7 @@ import { getUser, getHaha } from '../data/selectors'
 const Wrapper = styled.div``
 
 const ShelfBoard = ({ user, haha }) => {
-  return (
-    <Wrapper className="ShelfBoard">
-      <span>this is ShelfBoard</span>
-    </Wrapper>
-  )
+  return <Wrapper className="ShelfBoard">unmodified</Wrapper>
 }
 
 const mapState = (state) => ({

@@ -26,9 +26,7 @@ const UserBoards = ({ user, haha, getAction }) => {
 
   return (
     <Wrapper className="UserBoards">
-      <PaperWhite className={classes.root}>
-        <span>this is UserBoards</span>
-      </PaperWhite>
+      <PaperWhite className={classes.root}>unmodified</PaperWhite>
     </Wrapper>
   )
 }
