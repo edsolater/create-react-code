@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
+import { makeStyles } from '@material-ui/styles'
 
 import { PaperWhite, Button } from '@material-ui/core'
 import { AddIcon } from '@material-ui/icons'
@@ -13,13 +14,16 @@ const Wrapper = styled.section`
   height: 200;
   backgroung-color: dodgerBlue;
 `
+const useStyles = makeStyles((theme) => ({
+  root: {}
+}))
 
 const UserBoards = ({ user, haha, getAction }) => {
   return (
     <Wrapper className="UserBoards">
-      <paper_white>
+      <PaperWhite className={classes.root}>
         <span>this is UserBoards</span>
-      </paper_white>
+      </PaperWhite>
     </Wrapper>
   )
 }

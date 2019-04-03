@@ -22,7 +22,7 @@ const componentFileReplacingRules = [
   ],
   // 与 material_ui 相关的替换规则
   [
-    // material-ui/core
+    // core
     [
       /* import material-ui core */
       {
@@ -45,18 +45,20 @@ const componentFileReplacingRules = [
       {
         pattern: '{/* use material-ui coreMain::startTag */}',
         replaceFunction: ({ coreMain } = {}) =>
-          coreMain ? `<${preprocessing.stringToArray(coreMain)}>` : '',
+          coreMain
+            ? `<${preprocessing.toPascalCase(coreMain)} className={classes.root}>`
+            : '',
         parameters: ['componentProperties.materialUI']
       },
       /* use material-ui coreMain::endTag */
       {
         pattern: '{/* use material-ui coreMain::endTag */}',
         replaceFunction: ({ coreMain } = {}) =>
-          coreMain ? `</${preprocessing.stringToArray(coreMain)}>` : '',
+          coreMain ? `</${preprocessing.toPascalCase(coreMain)}>` : '',
         parameters: ['componentProperties.materialUI']
       }
     ],
-    // material-ui/icons
+    // icons
     [
       {
         pattern: '/* import material-ui icons */',
@@ -70,6 +72,34 @@ const componentFileReplacingRules = [
             return ''
           }
         },
+        parameters: ['componentProperties.materialUI']
+      }
+    ],
+    // styles
+    [
+      /* import material-ui styles */
+      {
+        pattern: '/* import material-ui styles */',
+        replaceFunction: ({ coreMain } = {}) =>
+          coreMain ? `import { makeStyles } from '@material-ui/styles'` : '',
+        parameters: ['componentProperties.materialUI']
+      },
+      /* set material-ui style */
+      {
+        pattern: '/* set material-ui style */',
+        replaceFunction: ({ coreMain } = {}) =>
+          coreMain
+            ? `const useStyles = makeStyles(theme => ({
+                root: {}
+              }))`
+            : '',
+        parameters: ['componentProperties.materialUI']
+      },
+      /* use material-ui style */
+      {
+        pattern: '/* use material-ui style */',
+        replaceFunction: ({ coreMain } = {}) =>
+          coreMain ? `const classes = useStyles()` : '',
         parameters: ['componentProperties.materialUI']
       }
     ]
