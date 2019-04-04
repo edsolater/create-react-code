@@ -52,7 +52,7 @@ module.exports = {
       Another__C: true,
     }
   },
-  data: {
+  functions: {
     classes: ['Board', 'Item'],
     reducers: ['items', 'shelfBoard', 'userBoard'] //TODO: 先做了 redux-reducers 才能做 redux-store
     // auto generate actionCreators.js

@@ -6,8 +6,8 @@ import { makeStyles } from '@material-ui/styles'
 import { PaperWhite, Button } from '@material-ui/core'
 import { AddIcon } from '@material-ui/icons'
 
-import { getUser, getHaha } from '../data/selectors'
-import { getAction } from '../data/actionCreators'
+import { getUser, getHaha } from '../functions/selectors'
+import { getAction } from '../functions/actionCreators'
 
 const Wrapper = styled.section`
   width: 100;

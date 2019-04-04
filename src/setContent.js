@@ -133,7 +133,7 @@ const componentFileReplacingRules = [
       replaceFunction: (mapState = {}, collection_selectorName = []) => {
         collection_selectorName.push(...Object.values(mapState))
         if (Object.entries(mapState).length) {
-          return `import {${Object.values(mapState)}} from '../data/selectors'`
+          return `import {${Object.values(mapState)}} from '../functions/selectors'`
         } else {
           return ''
         }
@@ -172,7 +172,7 @@ const componentFileReplacingRules = [
         mapDispatch = preprocessing.stringToArray(mapDispatch)
         actionCreatorCollection.push(...mapDispatch)
         if (mapDispatch.length) {
-          return `import {${mapDispatch}} from '../data/actionCreators'`
+          return `import {${mapDispatch}} from '../functions/actionCreators'`
         } else {
           return ''
         }

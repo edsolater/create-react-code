@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { UserBoards, ShelfBoard, Another } from '../components'
-import { selector1, selector2 } from '../data/selectors'
+import { selector1, selector2 } from '../functions/selectors'
 
 const Wrapper = styled.div``
 

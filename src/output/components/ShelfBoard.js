@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { getUser, getHaha } from '../data/selectors'
+import { getUser, getHaha } from '../functions/selectors'
 
 const Wrapper = styled.div``
 
