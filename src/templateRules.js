@@ -358,7 +358,7 @@ const content = {
       }
       ${classesNames ? `import { ${classesNames} } from '../classes'` : ''}
       const initialState = {
-        ${storeCode || '/* initialState */'}
+        ${storeCode() || '/* initialState */'}
       }
       export default createStore(rootReducer, initialState, ${
         middleware
