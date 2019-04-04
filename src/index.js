@@ -2,7 +2,7 @@
 const fs = require('fs')
 const prettier = require('prettier')
 
-const contentRule = require('./setContent')
+const contentRule = require('./templateRules')
 const appStructure = require('./appStructure')
 const { outputFolderName, prettierOptions } = require('./envSetting')
 
@@ -78,10 +78,7 @@ const create = {
     },
     outputIndex() {
       const file = `./${outputFolderName}/index.js`
-      const formattedContent = prettier.format(
-        contentRule.outputIndex(),
-        prettierOptions
-      )
+      const formattedContent = prettier.format(contentRule.outputIndex(), prettierOptions)
       fs.writeFileSync(file, formattedContent)
     },
     initialize_browser_css() {
@@ -147,7 +144,11 @@ const create = {
     store() {
       const file = `./${outputFolderName}/functions/store.js`
       const formattedContent = prettier.format(
-        contentRule.store(),
+        contentRule.store({
+          classesNames: appStructure.functions.classes,
+          storeCode: appStructure.functions.store,
+          middleware:appStructure.functions.middleware
+        }),
         prettierOptions
       )
       fs.writeFileSync(file, formattedContent)

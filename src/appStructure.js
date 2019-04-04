@@ -54,9 +54,53 @@ module.exports = {
   },
   functions: {
     classes: ['Board', 'Item'],
-    reducers: ['items', 'shelfBoard', 'userBoard'] //TODO: 先做了 redux-reducers 才能做 redux-store
+    reducers: ['items', 'shelfBoard', 'userBoard'], //TODO: 先做了 redux-reducers 才能做 redux-store
     // auto generate actionCreators.js
     // auto generate selectors.js
-    // auto generate store.js //TODO
+    // auto generate store.js 
+    middleware:[{packageName:'redux-multi', variableName:'multi'}],
+    store:`
+      shelfBoards: {
+        all: {
+          0: new Board({
+            type: 'shelfBoard',
+            id: '0',
+            name: 'S',
+            items: []
+          }),
+          1: new Board({ type: 'shelfBoard', id: '1', name: 'I' }),
+          2: new Board({ type: 'shelfBoard', id: '2', name: 'M' }),
+          3: new Board({ type: 'shelfBoard', id: '3', name: 'P' }),
+          4: new Board({ type: 'shelfBoard', id: '4', name: 'L' }),
+          5: new Board({ type: 'shelfBoard', id: '5', name: 'E' }),
+          length: 6
+        },
+        active: {
+          type: 'shelfBoard',
+          id: '0',
+          name: 'S',
+          items: []
+        }
+      },
+      userBoards: {
+        all: { 0: new Board({ name: 'default userBoard' }), length: 1 },
+        active: {}
+      },
+      menuBoards: {
+        all: {
+          0: new Board({ type: 'menuBoard', id: 'menu-0000', name: 'shelf-menu' }),
+          length: 1
+        }
+      },
+      items: {
+        all: {
+          0: new Item({
+            id: '0',
+            title: 'NO.1 Item',
+            subtitle: 'first one'
+          }),
+          length: 1
+        }
+      }`
   }
 }

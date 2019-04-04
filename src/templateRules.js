@@ -290,7 +290,9 @@ const content = {
   reducerIndex: reducerNames => {
     return `
       import { combineReducers } from 'redux'
-      ${reducerNames.map(reducerName => `import ${reducerName} from './${reducerName}'`).join('\n')}
+      ${reducerNames
+        .map(reducerName => `import ${reducerName} from './${reducerName}'`)
+        .join('\n')}
       export default combineReducers({${reducerNames.join(',')}})
     `
   },
@@ -328,17 +330,32 @@ const content = {
       window.${customedClassName} = ${customedClassName}
     `
   },
-  store: () => {
+  store: ({ classesNames, storeCode, middleware }) => {
     // TODO: 这只是占位代码
     return `
-      import { createStore } from 'redux'
+      import { createStore, ${middleware ? 'applyMiddleware' : ''} } from 'redux'
       import rootReducer from './reducers'
-      
-      const initialState = {
-        /* initialState */
+      ${
+        middleware
+          ? middleware
+              .map(
+                middlewareName =>
+                  `import ${middlewareName.variableName} from '${
+                    middlewareName.packageName
+                  }'` || ''
+              )
+              .join('\n')
+          : ''
       }
-      
-      export default createStore(rootReducer, initialState)
+      ${classesNames ? `import { ${classesNames} } from './classes'` : ''}
+      const initialState = {
+        ${storeCode || '/* initialState */'}
+      }
+      export default createStore(rootReducer, initialState, ${
+        middleware
+          ? `applyMiddleware([${middleware.map(({ variableName }) => variableName)}])`
+          : ''
+      })
     `
   }
 }
