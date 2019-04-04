@@ -25,10 +25,12 @@ module.exports = {
         wrapperType: 'section',
         materialUI: {
           coreMain: 'paper_white', //需要把但个字符串包裹数组以方便解析
-          coreMainStyle: `
-            width: 10 * theme.spacing.unit,
-            height: 10 * theme.spacing.unit
-          `,
+          coreMainStyle: theme => {
+            return `{
+              width: 10 * theme.spacing.unit,
+              height: 10 * theme.spacing.unit
+            }`
+          },
           coreOthers: 'button',
           icons: 'add'
         },
@@ -49,17 +51,17 @@ module.exports = {
           haha: 'getHaha'
         }
       },
-      Another__C: true,
+      Another__C: true
     }
   },
   functions: {
     classes: ['Board', 'Item'],
-    reducers: ['items', 'shelfBoard', 'userBoard'], //TODO: 先做了 redux-reducers 才能做 redux-store
+    reducers: ['items', 'shelfBoard', 'userBoard'],
     // auto generate actionCreators.js
     // auto generate selectors.js
-    middleware:[{packageName:'redux-multi', variableName:'multi'}],
-    // auto generate store.js 
-    store:`
+    middleware: [{ packageName: 'redux-multi', variableName: 'multi' }],
+    // auto generate store.js
+    store: `
       shelfBoards: {
         all: {
           0: new Board({

@@ -90,9 +90,7 @@ const componentFileReplacingRules = [
         replaceFunction: ({ coreMain, coreMainStyle } = {}) =>
           coreMain
             ? `const useStyles = makeStyles(theme => ({
-                root: {
-                  ${coreMainStyle || ''}
-                }
+                root: ${coreMainStyle() || '{}'}
               }))`
             : '',
         parameters: ['componentProperties.materialUI']
@@ -225,7 +223,7 @@ const content = {
     componentProperties,
     collection = {}
   ) => {
-    const componentTemplate = fs.readFileSync('./componentTemplate.js')
+    const componentTemplate = fs.readFileSync('./fileTemplate_component.js')
     return Object.values(componentFileReplacingRules)
       .flat(2)
       .reduce(
