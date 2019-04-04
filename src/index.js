@@ -4,7 +4,7 @@ const prettier = require('prettier')
 
 const contentRule = require('./setContent')
 const appStructure = require('./appStructure')
-const { setting_outputFolderName, setting_prettierConfig } = require('./envSetting')
+const { outputFolderName, prettierOptions } = require('./envSetting')
 
 const collection = {
   selectorName: [],
@@ -14,33 +14,33 @@ const collection = {
 const exist = {
   folder: {
     output() {
-      return fs.existsSync(`./${setting_outputFolderName}`)
+      return fs.existsSync(`./${outputFolderName}`)
     },
     classes() {
-      return fs.existsSync(`./${setting_outputFolderName}/data/classes`)
+      return fs.existsSync(`./${outputFolderName}/data/classes`)
     }
   }
 }
 const create = {
   folder: {
     output() {
-      fs.mkdirSync(`./${setting_outputFolderName}`)
+      fs.mkdirSync(`./${outputFolderName}`)
     },
     reactComponents() {
-      fs.mkdirSync(`./${setting_outputFolderName}/components`)
+      fs.mkdirSync(`./${outputFolderName}/components`)
     },
     data() {
-      fs.mkdirSync(`./${setting_outputFolderName}/data`)
+      fs.mkdirSync(`./${outputFolderName}/data`)
     },
     classes() {
-      fs.mkdirSync(`./${setting_outputFolderName}/data/classes`)
+      fs.mkdirSync(`./${outputFolderName}/data/classes`)
     },
     reducers() {
-      fs.mkdirSync(`./${setting_outputFolderName}/data/reducers`)
+      fs.mkdirSync(`./${outputFolderName}/data/reducers`)
     }
   },
   files: {
-    componentFile(partOfTree, currentPath = `./${setting_outputFolderName}/components`) {
+    componentFile(partOfTree, currentPath = `./${outputFolderName}/components`) {
       for (let [componentName, componentProperties] of Object.entries(partOfTree)) {
         // 预处理：删去组件的标识性前缀 & 智能提取子组件的名字
         componentName = componentName.replace('__C', '')
@@ -56,7 +56,7 @@ const create = {
         const file = `${currentPath}/${componentName}.js`
         const formattedContent = prettier.format(
           contentRule.componentFile(componentName, componentProperties, collection),
-          setting_prettierConfig
+          prettierOptions
         )
         fs.writeFileSync(file, formattedContent)
 
@@ -69,86 +69,86 @@ const create = {
       }
     },
     componentIndex() {
-      const file = `./${setting_outputFolderName}/components/index.js`
+      const file = `./${outputFolderName}/components/index.js`
       const formattedContent = prettier.format(
         contentRule.componentIndex(collection.componentName),
-        setting_prettierConfig
+        prettierOptions
       )
       fs.writeFileSync(file, formattedContent)
     },
     outputIndex() {
-      const file = `./${setting_outputFolderName}/index.js`
+      const file = `./${outputFolderName}/index.js`
       const formattedContent = prettier.format(
         contentRule.outputIndex(),
-        setting_prettierConfig
+        prettierOptions
       )
       fs.writeFileSync(file, formattedContent)
     },
     initialize_browser_css() {
-      const file = `./${setting_outputFolderName}/initialize_browser_css.css`
+      const file = `./${outputFolderName}/initialize_browser_css.css`
       const formattedContent = prettier.format(contentRule.initialize_browser_css(), {
-        ...setting_prettierConfig,
+        ...prettierOptions,
         parser: 'css'
       })
       fs.writeFileSync(file, formattedContent)
     },
     initialize_material_ui() {
-      const file = `./${setting_outputFolderName}/initialize_material_ui.js`
+      const file = `./${outputFolderName}/initialize_material_ui.js`
       const formattedContent = prettier.format(
         contentRule.initialize_material_ui(),
-        setting_prettierConfig
+        prettierOptions
       )
       fs.writeFileSync(file, formattedContent)
     },
     reducers() {
       for (const reducerName of appStructure.data.reducers) {
-        const file = `./${setting_outputFolderName}/data/reducers/${reducerName}.js`
+        const file = `./${outputFolderName}/data/reducers/${reducerName}.js`
         const formattedContent = prettier.format(
           contentRule.reducerFile(reducerName),
-          setting_prettierConfig
+          prettierOptions
         )
         fs.writeFileSync(file, formattedContent)
       }
     },
     reducerIndex() {
-      const file = `./${setting_outputFolderName}/data/reducers/index.js`
+      const file = `./${outputFolderName}/data/reducers/index.js`
       const formattedContent = prettier.format(
         contentRule.reducerIndex(appStructure.data.reducers),
-        setting_prettierConfig
+        prettierOptions
       )
       fs.writeFileSync(file, formattedContent)
     },
     selector() {
-      const file = `./${setting_outputFolderName}/data/selectors.js`
+      const file = `./${outputFolderName}/data/selectors.js`
       const formattedContent = prettier.format(
         contentRule.selectors(collection.selectorName),
-        setting_prettierConfig
+        prettierOptions
       )
       fs.writeFileSync(file, formattedContent)
     },
     actionCreator() {
-      const file = `./${setting_outputFolderName}/data/actionCreators.js`
+      const file = `./${outputFolderName}/data/actionCreators.js`
       const formattedContent = prettier.format(
         contentRule.actionCreators(collection.actionCreatorName),
-        setting_prettierConfig
+        prettierOptions
       )
       fs.writeFileSync(file, formattedContent)
     },
     classes() {
       for (customedClassName of appStructure.data.classes) {
-        const file = `./${setting_outputFolderName}/data/classes/${customedClassName}.js`
+        const file = `./${outputFolderName}/data/classes/${customedClassName}.js`
         const formattedContent = prettier.format(
           contentRule.classes(customedClassName),
-          setting_prettierConfig
+          prettierOptions
         )
         fs.writeFileSync(file, formattedContent)
       }
     },
     store() {
-      const file = `./${setting_outputFolderName}/data/store.js`
+      const file = `./${outputFolderName}/data/store.js`
       const formattedContent = prettier.format(
         contentRule.store(),
-        setting_prettierConfig
+        prettierOptions
       )
       fs.writeFileSync(file, formattedContent)
     }
