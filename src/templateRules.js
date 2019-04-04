@@ -133,7 +133,7 @@ const componentFileReplacingRules = [
       replaceFunction: (mapState = {}, collection_selectorName = []) => {
         collection_selectorName.push(...Object.values(mapState))
         if (Object.entries(mapState).length) {
-          return `import {${Object.values(mapState)}} from '../functions/selectors'`
+          return `import {${Object.values(mapState)}} from '../functions/redux/selectors'`
         } else {
           return ''
         }
@@ -172,7 +172,7 @@ const componentFileReplacingRules = [
         mapDispatch = preprocessing.stringToArray(mapDispatch)
         actionCreatorCollection.push(...mapDispatch)
         if (mapDispatch.length) {
-          return `import {${mapDispatch}} from '../functions/actionCreators'`
+          return `import {${mapDispatch}} from '../functions/redux/actionCreators'`
         } else {
           return ''
         }
@@ -322,12 +322,23 @@ const content = {
         .join('\n\n')
     }
   },
-  classes: customedClassName => {
+  classes: customedClassesNames => {
     return `
-      export default class ${customedClassName} {
+      export default class ${customedClassesNames} {
         constructor() {}
       }
-      window.${customedClassName} = ${customedClassName}
+      window.${customedClassesNames} = ${customedClassesNames}
+    `
+  },
+  classesIndex: customedClassesNames => {
+    return `
+      ${customedClassesNames
+        .map(
+          customedClassName => `import ${customedClassName} from './${customedClassName}'`
+        )
+        .join('\n')}
+      
+      export { ${customedClassesNames} }
     `
   },
   store: ({ classesNames, storeCode, middleware }) => {
@@ -347,7 +358,7 @@ const content = {
               .join('\n')
           : ''
       }
-      ${classesNames ? `import { ${classesNames} } from './classes'` : ''}
+      ${classesNames ? `import { ${classesNames} } from '../classes'` : ''}
       const initialState = {
         ${storeCode || '/* initialState */'}
       }

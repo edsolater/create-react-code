@@ -57,8 +57,8 @@ module.exports = {
     reducers: ['items', 'shelfBoard', 'userBoard'], //TODO: 先做了 redux-reducers 才能做 redux-store
     // auto generate actionCreators.js
     // auto generate selectors.js
-    // auto generate store.js 
     middleware:[{packageName:'redux-multi', variableName:'multi'}],
+    // auto generate store.js 
     store:`
       shelfBoards: {
         all: {

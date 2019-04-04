@@ -35,8 +35,11 @@ const create = {
     classes() {
       fs.mkdirSync(`./${outputFolderName}/functions/classes`)
     },
+    redux(){
+      fs.mkdirSync(`./${outputFolderName}/functions/redux`)
+    },
     reducers() {
-      fs.mkdirSync(`./${outputFolderName}/functions/reducers`)
+      fs.mkdirSync(`./${outputFolderName}/functions/redux/reducers`)
     }
   },
   files: {
@@ -99,7 +102,7 @@ const create = {
     },
     reducers() {
       for (const reducerName of appStructure.functions.reducers) {
-        const file = `./${outputFolderName}/functions/reducers/${reducerName}.js`
+        const file = `./${outputFolderName}/functions/redux/reducers/${reducerName}.js`
         const formattedContent = prettier.format(
           contentRule.reducerFile(reducerName),
           prettierOptions
@@ -108,7 +111,7 @@ const create = {
       }
     },
     reducerIndex() {
-      const file = `./${outputFolderName}/functions/reducers/index.js`
+      const file = `./${outputFolderName}/functions/redux/reducers/index.js`
       const formattedContent = prettier.format(
         contentRule.reducerIndex(appStructure.functions.reducers),
         prettierOptions
@@ -116,7 +119,7 @@ const create = {
       fs.writeFileSync(file, formattedContent)
     },
     selector() {
-      const file = `./${outputFolderName}/functions/selectors.js`
+      const file = `./${outputFolderName}/functions/redux/selectors.js`
       const formattedContent = prettier.format(
         contentRule.selectors(collection.selectorName),
         prettierOptions
@@ -124,7 +127,7 @@ const create = {
       fs.writeFileSync(file, formattedContent)
     },
     actionCreator() {
-      const file = `./${outputFolderName}/functions/actionCreators.js`
+      const file = `./${outputFolderName}/functions/redux/actionCreators.js`
       const formattedContent = prettier.format(
         contentRule.actionCreators(collection.actionCreatorName),
         prettierOptions
@@ -141,8 +144,16 @@ const create = {
         fs.writeFileSync(file, formattedContent)
       }
     },
+    classesIndex() {
+      const file = `./${outputFolderName}/functions/classes/index.js`
+      const formattedContent = prettier.format(
+        contentRule.classesIndex(appStructure.functions.classes),
+        prettierOptions
+      )
+      fs.writeFileSync(file, formattedContent)
+    },
     store() {
-      const file = `./${outputFolderName}/functions/store.js`
+      const file = `./${outputFolderName}/functions/redux/store.js`
       const formattedContent = prettier.format(
         contentRule.store({
           classesNames: appStructure.functions.classes,
@@ -161,6 +172,7 @@ if (!exist.folder.output()) {
   create.folder.output()
   create.folder.reactComponents()
   create.folder.functions()
+  create.folder.redux()
   if (appStructure.functions.reducers) create.folder.reducers()
 }
 
@@ -177,5 +189,6 @@ create.files.actionCreator()
 if (appStructure.functions.classes && !exist.folder.classes()) {
   create.folder.classes()
   create.files.classes()
+  create.files.classesIndex()
 }
 create.files.store()

@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware } from 'redux'
 import rootReducer from './reducers'
 import multi from 'redux-multi'
-import { Board, Item } from './classes'
+import { Board, Item } from '../classes'
 const initialState = {
   shelfBoards: {
     all: {
