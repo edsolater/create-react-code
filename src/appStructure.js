@@ -34,10 +34,12 @@ module.exports = {
           coreOthers: 'button',
           icons: 'add'
         },
-        style: {
-          width: 100,
-          height: 200,
-          'background-color': 'dodgerBlue'
+        style() {
+          return `
+            width: 100;
+            height: 200;
+            background-color: dodgerBlue;
+          `
         },
         mapState: {
           user: 'getUser',

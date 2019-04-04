@@ -4,7 +4,9 @@ import styled from 'styled-components'
 
 import { getUser, getHaha } from '../functions/redux/selectors'
 
-const Wrapper = styled.div``
+const Wrapper = styled.div`
+  // this component has no style
+`
 
 const ShelfBoard = ({ user, haha }) => {
   return <Wrapper className="ShelfBoard">unmodified</Wrapper>

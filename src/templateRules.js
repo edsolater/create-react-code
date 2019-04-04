@@ -207,10 +207,9 @@ const componentFileReplacingRules = [
     // style
     {
       pattern: '/* style */',
-      replaceFunction: (style = {}) =>
-        Object.entries(style)
-          .map(([CSSName, CSSValue]) => `${CSSName}: ${CSSValue};`)
-          .join('\n'),
+      replaceFunction(style) {
+        return style ? style() : ''
+      },
       parameters: ['componentProperties.style']
     }
   ]

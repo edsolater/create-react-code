@@ -2,7 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-const Wrapper = styled.div``
+const Wrapper = styled.div`
+  // this component has no style
+`
 
 const Another = ({}) => {
   return <Wrapper className="Another">unmodified</Wrapper>
