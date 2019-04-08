@@ -3,11 +3,9 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { UserBoards, ShelfBoard, Another } from '../components'
-import { selector1, selector2 } from '../functions/redux/selectors'
+import { selector1, selector2 } from '../redux/selectors'
 
-const Wrapper = styled.div`
-  // this component has no style
-`
+const Wrapper = styled.div``
 
 const Parent = ({ hello, hei }) => {
   return (

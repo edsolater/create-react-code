@@ -2,11 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { getUser, getHaha } from '../functions/redux/selectors'
+import { getUser, getHaha } from '../redux/selectors'
 
-const Wrapper = styled.div`
-  // this component has no style
-`
+const Wrapper = styled.div``
 
 const ShelfBoard = ({ user, haha }) => {
   return <Wrapper className="ShelfBoard">unmodified</Wrapper>

@@ -131,7 +131,7 @@ const componentFileReplacingRules = [
       replaceFunction: (mapState = {}, collection_selectorName = []) => {
         collection_selectorName.push(...Object.values(mapState))
         if (Object.entries(mapState).length) {
-          return `import {${Object.values(mapState)}} from '../functions/redux/selectors'`
+          return `import {${Object.values(mapState)}} from '../redux/selectors'`
         } else {
           return ''
         }
@@ -170,7 +170,7 @@ const componentFileReplacingRules = [
         mapDispatch = preprocessing.stringToArray(mapDispatch)
         actionCreatorCollection.push(...mapDispatch)
         if (mapDispatch.length) {
-          return `import {${mapDispatch}} from '../functions/redux/actionCreators'`
+          return `import {${mapDispatch}} from '../redux/actionCreators'`
         } else {
           return ''
         }
@@ -236,12 +236,13 @@ const content = {
       )
   },
   componentIndex: componentsNames => {
+    const rootComponent = componentsNames[0]
     return `
       import React from 'react'
       ${componentsNames.map(name => `import ${name} from './${name}'`).join('\n')}
       
       export {${componentsNames.join(',')}}
-      export default ${componentsNames[0]}
+      export default ${rootComponent}
     `
   },
   outputIndex: () => {

@@ -56,8 +56,8 @@ module.exports = {
       Another__C: true
     }
   },
-  functions: {
-    classes: ['Board', 'Item'],
+  classes: ['Board', 'Item'],
+  redux: {
     reducers: ['items', 'shelfBoard', 'userBoard'],
     // auto generate actionCreators.js
     // auto generate selectors.js
@@ -65,48 +65,54 @@ module.exports = {
     // auto generate store.js
     store: () => {
       return `
-        shelfBoards: {
-          all: {
-            0: new Board({
+          shelfBoards: {
+            all: {
+              0: new Board({
+                type: 'shelfBoard',
+                id: '0',
+                name: 'S',
+                items: []
+              }),
+              1: new Board({ type: 'shelfBoard', id: '1', name: 'I' }),
+              2: new Board({ type: 'shelfBoard', id: '2', name: 'M' }),
+              3: new Board({ type: 'shelfBoard', id: '3', name: 'P' }),
+              4: new Board({ type: 'shelfBoard', id: '4', name: 'L' }),
+              5: new Board({ type: 'shelfBoard', id: '5', name: 'E' }),
+              length: 6
+            },
+            active: {
               type: 'shelfBoard',
               id: '0',
               name: 'S',
               items: []
-            }),
-            1: new Board({ type: 'shelfBoard', id: '1', name: 'I' }),
-            2: new Board({ type: 'shelfBoard', id: '2', name: 'M' }),
-            3: new Board({ type: 'shelfBoard', id: '3', name: 'P' }),
-            4: new Board({ type: 'shelfBoard', id: '4', name: 'L' }),
-            5: new Board({ type: 'shelfBoard', id: '5', name: 'E' }),
-            length: 6
+            }
           },
-          active: {
-            type: 'shelfBoard',
-            id: '0',
-            name: 'S',
-            items: []
-          }
-        },
-        userBoards: {
-          all: { 0: new Board({ name: 'default userBoard' }), length: 1 },
-          active: {}
-        },
-        menuBoards: {
-          all: {
-            0: new Board({ type: 'menuBoard', id: 'menu-0000', name: 'shelf-menu' }),
-            length: 1
-          }
-        },
-        items: {
-          all: {
-            0: new Item({
-              id: '0',
-              title: 'NO.1 Item',
-              subtitle: 'first one'
-            }),
-            length: 1
-          }
-        }`
+          userBoards: {
+            all: { 0: new Board({ name: 'default userBoard' }), length: 1 },
+            active: {}
+          },
+          menuBoards: {
+            all: {
+              0: new Board({ type: 'menuBoard', id: 'menu-0000', name: 'shelf-menu' }),
+              length: 1
+            }
+          },
+          items: {
+            all: {
+              0: new Item({
+                id: '0',
+                title: 'NO.1 Item',
+                subtitle: 'first one'
+              }),
+              length: 1
+            }
+          }`
     }
+  },
+  asset: {
+    // TODO
+    media: {}, // TODO
+    text: {}, // TODO
+    index: {} // TODO
   }
 }
