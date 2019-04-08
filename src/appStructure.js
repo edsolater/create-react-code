@@ -114,5 +114,9 @@ module.exports = {
     media: {}, // TODO
     text: {}, // TODO
     index: {} // TODO
+  },
+  theme: {
+    // TODO
+    material_ui: {}, // TODO
   }
 }

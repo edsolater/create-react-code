@@ -239,10 +239,20 @@ const content = {
     const rootComponent = componentsNames[0]
     return `
       import React from 'react'
+      import { Provider } from 'react-redux'
+      import store from '../redux/store'
+      import MaterialTheme from '../theme/material_ui'
+      
       ${componentsNames.map(name => `import ${name} from './${name}'`).join('\n')}
       
       export {${componentsNames.join(',')}}
-      export default ${rootComponent}
+      export default () => (
+        <Provider store={store}>
+          <MaterialTheme>
+            <${rootComponent} />
+          </MaterialTheme>
+        </Provider>
+      )
     `
   },
   outputIndex: () => {
