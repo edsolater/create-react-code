@@ -18,6 +18,7 @@
 module.exports = {
   components: {
     Parent__C: {
+      componentType: 'container',
       UserBoards__C: {
         style: `
           width: 100;

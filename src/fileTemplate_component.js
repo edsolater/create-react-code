@@ -18,7 +18,7 @@ const $TM_FILENAME_BASE = (
 ) => {
   /* use material-ui style */
   return (
-    <Wrapper className="$TM_FILENAME_BASE">
+    <Wrapper className="componentType:$TM_FILENAME_BASE">
       {/* use material-ui coreMain::startTag */}
       $TM_FILENAME_BASE
       {/* use child components */}
@@ -26,7 +26,6 @@ const $TM_FILENAME_BASE = (
     </Wrapper>
   )
 }
-
 /* set mapState with selectors */
 /* set mapDispatch with actionCreators */
 

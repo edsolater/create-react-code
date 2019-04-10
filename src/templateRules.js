@@ -12,12 +12,19 @@ const preprocessing = {
 }
 // 对生成组件使用的规则
 const componentFileReplacingRules = [
-  // 与 component name 相关的替换规则
+  // 与依赖无关
   [
+    // componentName
     {
       pattern: /\$TM_FILENAME_BASE/g,
       replaceFunction: componentName => componentName,
       parameters: ['componentName']
+    },
+    // componentType
+    {
+      pattern: 'componentType',
+      replaceFunction: (componentType = 'element') => componentType,
+      parameters: ['componentProperties.componentType']
     }
   ],
   // 与 material_ui 相关的替换规则
@@ -26,13 +33,13 @@ const componentFileReplacingRules = [
     [
       /* import material-ui core */
       {
-        pattern: '/* import material-ui core */',
+        pattern: '/* import material-ui core */\n',
         replaceFunction: ({ coreMain, coreOthers } = {}) => {
           let cores = []
           if (coreMain) cores.push(coreMain)
           if (coreOthers) cores.push(...preprocessing.stringToArray(coreOthers))
           if (cores.length) {
-            return `import {${cores.map(preprocessing.toPascalCase)}} from '@material-ui/core'`
+            return `import {${cores.map(preprocessing.toPascalCase)}} from '@material-ui/core'\n`
           } else {
             return ''
           }
@@ -57,11 +64,11 @@ const componentFileReplacingRules = [
     // icons
     [
       {
-        pattern: '/* import material-ui icons */',
+        pattern: '/* import material-ui icons */\n',
         replaceFunction: ({ icons } = {}) => {
           icons = preprocessing.stringToArray(icons)
           if (icons.length) {
-            return `import {${icons.map(preprocessing.suffixIconName)}} from '@material-ui/icons'`
+            return `import {${icons.map(preprocessing.suffixIconName)}} from '@material-ui/icons'\n`
           } else {
             return ''
           }
@@ -73,9 +80,9 @@ const componentFileReplacingRules = [
     [
       /* import material-ui styles */
       {
-        pattern: '/* import material-ui styles */',
+        pattern: '/* import material-ui styles */\n',
         replaceFunction: ({ coreMain } = {}) =>
-          coreMain ? `import { makeStyles } from '@material-ui/styles'` : '',
+          coreMain ? `import { makeStyles } from '@material-ui/styles'\n` : '',
         parameters: ['componentProperties.materialUI']
       },
       /* set material-ui style */
@@ -101,10 +108,10 @@ const componentFileReplacingRules = [
   [
     // import
     {
-      pattern: '/* import child components */',
+      pattern: '/* import child components */\n',
       replaceFunction: (childComponentNames = []) =>
         childComponentNames.length
-          ? `import {${childComponentNames.join(',')}} from '../components'`
+          ? `import {${childComponentNames.join(',')}} from '../components'\n`
           : '',
       parameters: ['componentProperties.childComponentNames']
     },
@@ -120,23 +127,23 @@ const componentFileReplacingRules = [
   [
     // import connect from 'react-redux
     {
-      pattern: "import { connect } from 'react-redux'",
+      pattern: "import { connect } from 'react-redux'\n",
       replaceFunction: (mapState, mapDispatch) => {
         if (!mapState && !mapDispatch) {
           return ''
         } else {
-          return "import { connect } from 'react-redux'"
+          return "import { connect } from 'react-redux'\n"
         }
       },
       parameters: ['componentProperties.mapState', 'componentProperties.mapDispatch']
     },
     // import selectors
     {
-      pattern: '/* import selectors */',
+      pattern: '/* import selectors */\n',
       replaceFunction: (mapState = {}, collection_selectorName = []) => {
         collection_selectorName.push(...Object.values(mapState))
         if (Object.entries(mapState).length) {
-          return `import {${Object.values(mapState)}} from '../redux/selectors'`
+          return `import {${Object.values(mapState)}} from '../redux/selectors'\n`
         } else {
           return ''
         }
@@ -145,12 +152,12 @@ const componentFileReplacingRules = [
     },
     // set mapState with selectors
     {
-      pattern: '/* set mapState with selectors */',
+      pattern: '/* set mapState with selectors */\n',
       replaceFunction: mapState => {
         if (mapState) {
           return `const mapState = (state) => ({
             ${Object.entries(mapState).map(([prop, selector]) => `${prop}: ${selector}(state)`)}
-          })`
+          })\n`
         } else {
           return ''
         }
@@ -171,12 +178,12 @@ const componentFileReplacingRules = [
     },
     // import actionCreators
     {
-      pattern: '\n/* import actionCreators */',
+      pattern: '/* import actionCreators */\n',
       replaceFunction: (mapDispatch = [], actionCreatorCollection = []) => {
         mapDispatch = preprocessing.stringToArray(mapDispatch)
         actionCreatorCollection.push(...mapDispatch)
         if (mapDispatch.length) {
-          return `import {${mapDispatch}} from '../redux/actionCreators'`
+          return `import {${mapDispatch}} from '../redux/actionCreators'\n`
         } else {
           return ''
         }
@@ -185,10 +192,10 @@ const componentFileReplacingRules = [
     },
     // set mapDispatch with actionCreators
     {
-      pattern: '/* set mapDispatch with actionCreators */',
+      pattern: '/* set mapDispatch with actionCreators */\n',
       replaceFunction: mapDispatch => {
         if (mapDispatch) {
-          return `const mapDispatch = {${mapDispatch}}`
+          return `const mapDispatch = {${mapDispatch}}\n`
         } else {
           return ''
         }
@@ -229,10 +236,10 @@ const componentFileReplacingRules = [
   [
     // import styled-components
     {
-      pattern: "import styled from 'styled-components'",
+      pattern: "import styled from 'styled-components'\n",
       replaceFunction: (style, wrapperType) => {
         if (!style && !wrapperType) return ''
-        else return "import styled from 'styled-components'"
+        else return "import styled from 'styled-components'\n"
       },
       parameters: ['componentProperties.style', 'componentProperties.wrapperType']
     },
