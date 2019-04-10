@@ -268,7 +268,7 @@ const componentFileReplacingRules = [
   ]
 ]
 
-const content = {
+const templateRules = {
   componentFile: (
     // will be used by eval()
     componentName,
@@ -443,4 +443,4 @@ const content = {
   }
 }
 
-module.exports = content
+module.exports = templateRules
