@@ -16,13 +16,14 @@
 module.exports = {
   components: {
     Parent__C: {
-      mapState: {
-        hello: 'selector1',
-        hei: 'selector2'
-      },
       UserBoards__C: {
-        type: 'tab', //TODO: tab friendly template
-        wrapperType: 'section',
+        style() {
+          return `
+              width: 100;
+              height: 200;
+              background-color: dodgerBlue;
+            `
+        },
         materialUI: {
           coreMain: 'paper_white', //需要把但个字符串包裹数组以方便解析
           coreMainStyle: `{
@@ -31,13 +32,6 @@ module.exports = {
             }`,
           coreOthers: 'button',
           icons: 'add'
-        },
-        style() {
-          return `
-            width: 100;
-            height: 200;
-            background-color: dodgerBlue;
-          `
         },
         mapState: {
           user: 'getUser',

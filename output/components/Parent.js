@@ -1,16 +1,14 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { UserBoards, ShelfBoard, Another } from '../components'
-import { selector1, selector2 } from '../redux/selectors'
 
 const Wrapper = styled.div``
 
-const Parent = ({ hello, hei }) => {
+const Parent = ({}) => {
   return (
     <Wrapper className="Parent">
-      unmodified
+      Parent
       <UserBoards />
       <ShelfBoard />
       <Another />
@@ -18,13 +16,4 @@ const Parent = ({ hello, hei }) => {
   )
 }
 
-const mapState = (state) => ({
-  hello: selector1(state),
-  hei: selector2(state)
-})
-const mapDispatch = {}
-
-export default connect(
-  mapState,
-  mapDispatch
-)(Parent)
+export default Parent

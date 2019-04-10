@@ -1,6 +1,6 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import styled from 'styled-components'
+import { connect } from 'react-redux'
 /* import material-ui styles */
 
 /* import material-ui core */
@@ -25,7 +25,7 @@ const $TM_FILENAME_BASE = (
   return (
     <Wrapper className="$TM_FILENAME_BASE">
       {/* use material-ui coreMain::startTag */}
-      unmodified
+      $TM_FILENAME_BASE
       {/* use child components */}
       {/* use material-ui coreMain::endTag */}
     </Wrapper>
@@ -35,7 +35,4 @@ const $TM_FILENAME_BASE = (
 /* set mapState with selectors */
 /* set mapDispatch with actionCreators */
 
-export default connect(
-  mapState,
-  mapDispatch
-)($TM_FILENAME_BASE)
+/* export component */

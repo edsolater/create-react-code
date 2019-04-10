@@ -32,9 +32,7 @@ const componentFileReplacingRules = [
           if (coreMain) cores.push(coreMain)
           if (coreOthers) cores.push(...preprocessing.stringToArray(coreOthers))
           if (cores.length) {
-            return `import {${cores.map(
-              preprocessing.toPascalCase
-            )}} from '@material-ui/core'`
+            return `import {${cores.map(preprocessing.toPascalCase)}} from '@material-ui/core'`
           } else {
             return ''
           }
@@ -45,9 +43,7 @@ const componentFileReplacingRules = [
       {
         pattern: '{/* use material-ui coreMain::startTag */}',
         replaceFunction: ({ coreMain } = {}) =>
-          coreMain
-            ? `<${preprocessing.toPascalCase(coreMain)} className={classes.root}>`
-            : '',
+          coreMain ? `<${preprocessing.toPascalCase(coreMain)} className={classes.root}>` : '',
         parameters: ['componentProperties.materialUI']
       },
       /* use material-ui coreMain::endTag */
@@ -65,9 +61,7 @@ const componentFileReplacingRules = [
         replaceFunction: ({ icons } = {}) => {
           icons = preprocessing.stringToArray(icons)
           if (icons.length) {
-            return `import {${icons.map(
-              preprocessing.suffixIconName
-            )}} from '@material-ui/icons'`
+            return `import {${icons.map(preprocessing.suffixIconName)}} from '@material-ui/icons'`
           } else {
             return ''
           }
@@ -98,8 +92,7 @@ const componentFileReplacingRules = [
       /* use material-ui style */
       {
         pattern: '/* use material-ui style */',
-        replaceFunction: ({ coreMain } = {}) =>
-          coreMain ? `const classes = useStyles()` : '',
+        replaceFunction: ({ coreMain } = {}) => (coreMain ? `const classes = useStyles()` : ''),
         parameters: ['componentProperties.materialUI']
       }
     ]
@@ -123,8 +116,20 @@ const componentFileReplacingRules = [
       parameters: ['componentProperties.childComponentNames']
     }
   ],
-  // 与 selectors 相关的替换规则
+  // redux 相关
   [
+    // import connect from 'react-redux
+    {
+      pattern: "import { connect } from 'react-redux'",
+      replaceFunction: (mapState, mapDispatch) => {
+        if (!mapState && !mapDispatch) {
+          return ''
+        } else {
+          return "import { connect } from 'react-redux'"
+        }
+      },
+      parameters: ['componentProperties.mapState', 'componentProperties.mapDispatch']
+    },
     // import selectors
     {
       pattern: '/* import selectors */',
@@ -141,11 +146,15 @@ const componentFileReplacingRules = [
     // set mapState with selectors
     {
       pattern: '/* set mapState with selectors */',
-      replaceFunction: (mapState = {}) => `const mapState = (state) => ({
-        ${Object.entries(mapState).map(
-          ([prop, selector]) => `${prop}: ${selector}(state)`
-        )}
-      })`,
+      replaceFunction: mapState => {
+        if (mapState) {
+          return `const mapState = (state) => ({
+            ${Object.entries(mapState).map(([prop, selector]) => `${prop}: ${selector}(state)`)}
+          })`
+        } else {
+          return ''
+        }
+      },
       parameters: ['componentProperties.mapState']
     },
     // get mapState Props
@@ -159,10 +168,7 @@ const componentFileReplacingRules = [
         }
       },
       parameters: ['componentProperties.mapState']
-    }
-  ],
-  // 与 actionCreators 相关的替换规则
-  [
+    },
     // import actionCreators
     {
       pattern: '\n/* import actionCreators */',
@@ -180,7 +186,13 @@ const componentFileReplacingRules = [
     // set mapDispatch with actionCreators
     {
       pattern: '/* set mapDispatch with actionCreators */',
-      replaceFunction: (mapDispatch = []) => `const mapDispatch = {${mapDispatch}}`,
+      replaceFunction: mapDispatch => {
+        if (mapDispatch) {
+          return `const mapDispatch = {${mapDispatch}}`
+        } else {
+          return ''
+        }
+      },
       parameters: ['componentProperties.mapDispatch']
     },
     // get mapDispatch Props
@@ -194,10 +206,33 @@ const componentFileReplacingRules = [
         }
       },
       parameters: ['componentProperties.mapDispatch']
+    },
+    // 最终 export
+    {
+      pattern: '/* export component */',
+      replaceFunction(componentName, mapState, mapDispatch) {
+        if (!mapState && !mapDispatch) {
+          return `export default ${componentName}`
+        } else {
+          return `export default connect(${mapState && 'mapState'}, ${mapDispatch &&
+            'mapDispatch'})(${componentName})`
+        }
+      },
+      parameters: [
+        'componentName',
+        'componentProperties.mapState',
+        'componentProperties.mapDispatch'
+      ]
     }
   ],
   // styled_components
   [
+    // // import styled-components
+    // {
+    //   pattern: "import styled from 'styled-components'",
+    //   replaceFunction: (wrapperType = 'div') => wrapperType,
+    //   parameters: ['componentProperties.wrapperType']
+    // },
     // wrapperType
     {
       pattern: '/* wrapperType */ div',
@@ -298,9 +333,7 @@ const content = {
   reducerIndex: reducerNames => {
     return `
       import { combineReducers } from 'redux'
-      ${reducerNames
-        .map(reducerName => `import ${reducerName} from './${reducerName}'`)
-        .join('\n')}
+      ${reducerNames.map(reducerName => `import ${reducerName} from './${reducerName}'`).join('\n')}
       export default combineReducers({${reducerNames.join(',')}})
     `
   },
@@ -323,10 +356,7 @@ const content = {
       return '// no actionCreator in this app'
     } else {
       return actionCreatorCollection
-        .map(
-          actionCreator =>
-            `export const ${actionCreator} = (state) => ({type: 'unknown'})`
-        )
+        .map(actionCreator => `export const ${actionCreator} = (state) => ({type: 'unknown'})`)
         .join('\n\n')
     }
   },
@@ -341,9 +371,7 @@ const content = {
   classesIndex: customedClassesNames => {
     return `
       ${customedClassesNames
-        .map(
-          customedClassName => `import ${customedClassName} from './${customedClassName}'`
-        )
+        .map(customedClassName => `import ${customedClassName} from './${customedClassName}'`)
         .join('\n')}
       
       export { ${customedClassesNames} }
@@ -359,9 +387,7 @@ const content = {
           ? middleware
               .map(
                 middlewareName =>
-                  `import ${middlewareName.variableName} from '${
-                    middlewareName.packageName
-                  }'` || ''
+                  `import ${middlewareName.variableName} from '${middlewareName.packageName}'` || ''
               )
               .join('\n')
           : ''
@@ -371,9 +397,7 @@ const content = {
         ${initialState || '/* initialState */'}
       }
       export default createStore(rootReducer, initialState, ${
-        middleware
-          ? `applyMiddleware([${middleware.map(({ variableName }) => variableName)}])`
-          : ''
+        middleware ? `applyMiddleware([${middleware.map(({ variableName }) => variableName)}])` : ''
       })
     `
   }

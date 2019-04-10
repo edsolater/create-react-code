@@ -1,22 +1,21 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import styled from 'styled-components'
+import { connect } from 'react-redux'
 
 import { getUser, getHaha } from '../redux/selectors'
 
 const Wrapper = styled.div``
 
 const ShelfBoard = ({ user, haha }) => {
-  return <Wrapper className="ShelfBoard">unmodified</Wrapper>
+  return <Wrapper className="ShelfBoard">ShelfBoard</Wrapper>
 }
 
-const mapState = (state) => ({
+const mapState = state => ({
   user: getUser(state),
   haha: getHaha(state)
 })
-const mapDispatch = {}
 
 export default connect(
   mapState,
-  mapDispatch
+  undefined
 )(ShelfBoard)
