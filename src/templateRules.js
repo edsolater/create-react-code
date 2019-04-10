@@ -24,7 +24,7 @@ const componentFileReplacingRules = [
     {
       pattern: 'componentType',
       replaceFunction: (componentType = 'element') => componentType,
-      parameters: ['componentProperties.componentType']
+      parameters: ['componentType']
     }
   ],
   // 与 material_ui 相关的替换规则
@@ -39,26 +39,30 @@ const componentFileReplacingRules = [
           if (coreMain) cores.push(coreMain)
           if (coreOthers) cores.push(...preprocessing.stringToArray(coreOthers))
           if (cores.length) {
-            return `import {${cores.map(preprocessing.toPascalCase)}} from '@material-ui/core'\n`
+            return `import {${cores.map(
+              preprocessing.toPascalCase
+            )}} from '@material-ui/core'\n`
           } else {
             return ''
           }
         },
-        parameters: ['componentProperties.materialUI']
+        parameters: ['materialUI']
       },
       /* use material-ui coreMain::startTag */
       {
         pattern: '{/* use material-ui coreMain::startTag */}',
         replaceFunction: ({ coreMain } = {}) =>
-          coreMain ? `<${preprocessing.toPascalCase(coreMain)} className={classes.root}>` : '',
-        parameters: ['componentProperties.materialUI']
+          coreMain
+            ? `<${preprocessing.toPascalCase(coreMain)} className={classes.root}>`
+            : '',
+        parameters: ['materialUI']
       },
       /* use material-ui coreMain::endTag */
       {
         pattern: '{/* use material-ui coreMain::endTag */}',
         replaceFunction: ({ coreMain } = {}) =>
           coreMain ? `</${preprocessing.toPascalCase(coreMain)}>` : '',
-        parameters: ['componentProperties.materialUI']
+        parameters: ['materialUI']
       }
     ],
     // icons
@@ -68,12 +72,14 @@ const componentFileReplacingRules = [
         replaceFunction: ({ icons } = {}) => {
           icons = preprocessing.stringToArray(icons)
           if (icons.length) {
-            return `import {${icons.map(preprocessing.suffixIconName)}} from '@material-ui/icons'\n`
+            return `import {${icons.map(
+              preprocessing.suffixIconName
+            )}} from '@material-ui/icons'\n`
           } else {
             return ''
           }
         },
-        parameters: ['componentProperties.materialUI']
+        parameters: ['materialUI']
       }
     ],
     // styles
@@ -83,7 +89,7 @@ const componentFileReplacingRules = [
         pattern: '/* import material-ui styles */\n',
         replaceFunction: ({ coreMain } = {}) =>
           coreMain ? `import { makeStyles } from '@material-ui/styles'\n` : '',
-        parameters: ['componentProperties.materialUI']
+        parameters: ['materialUI']
       },
       /* set material-ui style */
       {
@@ -94,13 +100,14 @@ const componentFileReplacingRules = [
                 root: ${coreMainStyle || '{}'}
               }))`
             : '',
-        parameters: ['componentProperties.materialUI']
+        parameters: ['materialUI']
       },
       /* use material-ui style */
       {
         pattern: '/* use material-ui style */',
-        replaceFunction: ({ coreMain } = {}) => (coreMain ? `const classes = useStyles()` : ''),
-        parameters: ['componentProperties.materialUI']
+        replaceFunction: ({ coreMain } = {}) =>
+          coreMain ? `const classes = useStyles()` : '',
+        parameters: ['materialUI']
       }
     ]
   ],
@@ -113,14 +120,14 @@ const componentFileReplacingRules = [
         childComponentNames.length
           ? `import {${childComponentNames.join(',')}} from '../components'\n`
           : '',
-      parameters: ['componentProperties.childComponentNames']
+      parameters: ['childComponentNames']
     },
     // use
     {
       pattern: '{/* use child components */}',
       replaceFunction: (childComponentNames = []) =>
         childComponentNames.map(childName => `<${childName} />\n`).join(''),
-      parameters: ['componentProperties.childComponentNames']
+      parameters: ['childComponentNames']
     }
   ],
   // redux 相关
@@ -135,7 +142,7 @@ const componentFileReplacingRules = [
           return "import { connect } from 'react-redux'\n"
         }
       },
-      parameters: ['componentProperties.mapState', 'componentProperties.mapDispatch']
+      parameters: ['mapState', 'mapDispatch']
     },
     // import selectors
     {
@@ -148,7 +155,7 @@ const componentFileReplacingRules = [
           return ''
         }
       },
-      parameters: ['componentProperties.mapState', 'collection.selectorName']
+      parameters: ['mapState', 'collection.selectorName']
     },
     // set mapState with selectors
     {
@@ -156,13 +163,15 @@ const componentFileReplacingRules = [
       replaceFunction: mapState => {
         if (mapState) {
           return `const mapState = (state) => ({
-            ${Object.entries(mapState).map(([prop, selector]) => `${prop}: ${selector}(state)`)}
+            ${Object.entries(mapState).map(
+              ([prop, selector]) => `${prop}: ${selector}(state)`
+            )}
           })\n`
         } else {
           return ''
         }
       },
-      parameters: ['componentProperties.mapState']
+      parameters: ['mapState']
     },
     // get mapState Props
     {
@@ -174,7 +183,7 @@ const componentFileReplacingRules = [
           return ''
         }
       },
-      parameters: ['componentProperties.mapState']
+      parameters: ['mapState']
     },
     // import actionCreators
     {
@@ -188,7 +197,7 @@ const componentFileReplacingRules = [
           return ''
         }
       },
-      parameters: ['componentProperties.mapDispatch', 'collection.actionCreatorName']
+      parameters: ['mapDispatch', 'collection.actionCreatorName']
     },
     // set mapDispatch with actionCreators
     {
@@ -200,7 +209,7 @@ const componentFileReplacingRules = [
           return ''
         }
       },
-      parameters: ['componentProperties.mapDispatch']
+      parameters: ['mapDispatch']
     },
     // get mapDispatch Props
     {
@@ -212,7 +221,7 @@ const componentFileReplacingRules = [
           return ''
         }
       },
-      parameters: ['componentProperties.mapDispatch']
+      parameters: ['mapDispatch']
     },
     // 最终 export
     {
@@ -227,8 +236,8 @@ const componentFileReplacingRules = [
       },
       parameters: [
         'componentName',
-        'componentProperties.mapState',
-        'componentProperties.mapDispatch'
+        'mapState',
+        'mapDispatch'
       ]
     }
   ],
@@ -241,20 +250,20 @@ const componentFileReplacingRules = [
         if (!style && !wrapperType) return ''
         else return "import styled from 'styled-components'\n"
       },
-      parameters: ['componentProperties.style', 'componentProperties.wrapperType']
+      parameters: ['style', 'wrapperType']
     },
     // 设定了style
     {
       pattern: '/* config Wrapper */',
       replaceFunction: (wrapperType, style) =>
         style ? `const Wrapper = styled.${wrapperType || 'div'}\`${style || ''}\`` : '',
-      parameters: ['componentProperties.wrapperType', 'componentProperties.style']
+      parameters: ['wrapperType', 'style']
     },
     // 没有设定 style
     {
       pattern: /Wrapper/g,
       replaceFunction: (wrapperType = 'div', style) => (style ? 'Wrapper' : wrapperType),
-      parameters: ['componentProperties.wrapperType', 'componentProperties.style']
+      parameters: ['wrapperType', 'style']
     }
   ]
 ]
@@ -274,7 +283,18 @@ const content = {
           contentString.replace(
             // string.prototype.replace(string, string)
             pattern,
-            replaceFunction(...parameters.map(param => eval(param)))
+            replaceFunction(
+              ...parameters.map(param => {
+                // 如果函数的传参 eval() 会报错，视为 componentProperties 的属性名
+                let evalResult
+                try {
+                  evalResult = eval(param)
+                } catch (e) {
+                  evalResult = eval(`componentProperties.${param}`)
+                }
+                return evalResult
+              })
+            )
           ),
         `${componentTemplate}`
       )
@@ -342,7 +362,9 @@ const content = {
   reducerIndex: reducerNames => {
     return `
       import { combineReducers } from 'redux'
-      ${reducerNames.map(reducerName => `import ${reducerName} from './${reducerName}'`).join('\n')}
+      ${reducerNames
+        .map(reducerName => `import ${reducerName} from './${reducerName}'`)
+        .join('\n')}
       export default combineReducers({${reducerNames.join(',')}})
     `
   },
@@ -365,7 +387,10 @@ const content = {
       return '// no actionCreator in this app'
     } else {
       return actionCreatorCollection
-        .map(actionCreator => `export const ${actionCreator} = (state) => ({type: 'unknown'})`)
+        .map(
+          actionCreator =>
+            `export const ${actionCreator} = (state) => ({type: 'unknown'})`
+        )
         .join('\n\n')
     }
   },
@@ -380,7 +405,9 @@ const content = {
   classesIndex: customedClassesNames => {
     return `
       ${customedClassesNames
-        .map(customedClassName => `import ${customedClassName} from './${customedClassName}'`)
+        .map(
+          customedClassName => `import ${customedClassName} from './${customedClassName}'`
+        )
         .join('\n')}
       
       export { ${customedClassesNames} }
@@ -396,7 +423,9 @@ const content = {
           ? middleware
               .map(
                 middlewareName =>
-                  `import ${middlewareName.variableName} from '${middlewareName.packageName}'` || ''
+                  `import ${middlewareName.variableName} from '${
+                    middlewareName.packageName
+                  }'` || ''
               )
               .join('\n')
           : ''
@@ -406,7 +435,9 @@ const content = {
         ${initialState || '/* initialState */'}
       }
       export default createStore(rootReducer, initialState, ${
-        middleware ? `applyMiddleware([${middleware.map(({ variableName }) => variableName)}])` : ''
+        middleware
+          ? `applyMiddleware([${middleware.map(({ variableName }) => variableName)}])`
+          : ''
       })
     `
   }
