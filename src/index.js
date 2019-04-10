@@ -32,7 +32,7 @@ const create = {
     classes() {
       fs.mkdirSync(`./${outputFolderName}/classes`)
     },
-    redux(){
+    redux() {
       fs.mkdirSync(`./${outputFolderName}/redux`)
     },
     reducers() {
@@ -44,8 +44,8 @@ const create = {
       for (let [componentName, componentProperties] of Object.entries(partOfTree)) {
         // 预处理：删去组件的标识性前缀 & 智能提取子组件的名字
         componentName = componentName.replace('__C', '')
-        const childComponents = Object.entries(componentProperties).filter(
-          ([key, value]) => key.endsWith('__C')
+        const childComponents = Object.entries(componentProperties).filter(([key, value]) =>
+          key.endsWith('__C')
         )
         componentProperties.childComponentNames = childComponents.map(
           ([componentName, componentProperties]) => componentName.replace('__C', '')
@@ -98,7 +98,7 @@ const create = {
       fs.writeFileSync(file, formattedContent)
     },
     reducers() {
-      for (const reducerName of appStructure.redux.reducers) {
+      for (const reducerName of Object.keys(appStructure.redux.reducers)) {
         const file = `./${outputFolderName}/redux/reducers/${reducerName}.js`
         const formattedContent = prettier.format(
           contentRule.reducerFile(reducerName),
@@ -110,7 +110,7 @@ const create = {
     reducerIndex() {
       const file = `./${outputFolderName}/redux/reducers/index.js`
       const formattedContent = prettier.format(
-        contentRule.reducerIndex(appStructure.redux.reducers),
+        contentRule.reducerIndex(Object.keys(appStructure.redux.reducers)),
         prettierOptions
       )
       fs.writeFileSync(file, formattedContent)
@@ -132,7 +132,7 @@ const create = {
       fs.writeFileSync(file, formattedContent)
     },
     classes() {
-      for (customedClassName of appStructure.classes) {
+      for (customedClassName of Object.keys(appStructure.classes)) {
         const file = `./${outputFolderName}/classes/${customedClassName}.js`
         const formattedContent = prettier.format(
           contentRule.classes(customedClassName),
@@ -144,7 +144,7 @@ const create = {
     classesIndex() {
       const file = `./${outputFolderName}/classes/index.js`
       const formattedContent = prettier.format(
-        contentRule.classesIndex(appStructure.classes),
+        contentRule.classesIndex(Object.keys(appStructure.classes)),
         prettierOptions
       )
       fs.writeFileSync(file, formattedContent)
@@ -153,9 +153,9 @@ const create = {
       const file = `./${outputFolderName}/redux/store.js`
       const formattedContent = prettier.format(
         contentRule.store({
-          classesNames: appStructure.classes,
-          storeCode: appStructure.redux.store,
-          middleware:appStructure.redux.middleware
+          classesNames: Object.keys(appStructure.classes),
+          initialState: appStructure.redux.store.initialState,
+          middleware: appStructure.redux.store.middleware
         }),
         prettierOptions
       )

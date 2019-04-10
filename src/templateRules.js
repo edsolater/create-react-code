@@ -90,7 +90,7 @@ const componentFileReplacingRules = [
         replaceFunction: ({ coreMain, coreMainStyle } = {}) =>
           coreMain
             ? `const useStyles = makeStyles(theme => ({
-                root: ${coreMainStyle() || '{}'}
+                root: ${coreMainStyle || '{}'}
               }))`
             : '',
         parameters: ['componentProperties.materialUI']
@@ -349,7 +349,7 @@ const content = {
       export { ${customedClassesNames} }
     `
   },
-  store: ({ classesNames, storeCode, middleware }) => {
+  store: ({ classesNames, initialState, middleware }) => {
     // TODO: 这只是占位代码
     return `
       import { createStore, ${middleware ? 'applyMiddleware' : ''} } from 'redux'
@@ -368,7 +368,7 @@ const content = {
       }
       ${classesNames ? `import { ${classesNames} } from '../classes'` : ''}
       const initialState = {
-        ${storeCode() || '/* initialState */'}
+        ${initialState || '/* initialState */'}
       }
       export default createStore(rootReducer, initialState, ${
         middleware

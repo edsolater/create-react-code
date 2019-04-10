@@ -25,12 +25,10 @@ module.exports = {
         wrapperType: 'section',
         materialUI: {
           coreMain: 'paper_white', //需要把但个字符串包裹数组以方便解析
-          coreMainStyle: theme => {
-            return `{
+          coreMainStyle: `{
               width: 10 * theme.spacing.unit,
               height: 10 * theme.spacing.unit
-            }`
-          },
+            }`,
           coreOthers: 'button',
           icons: 'add'
         },
@@ -56,57 +54,65 @@ module.exports = {
       Another__C: true
     }
   },
-  classes: ['Board', 'Item'],
+  classes: {
+    Board: true,
+    Item: true
+  },
   redux: {
-    reducers: ['items', 'shelfBoard', 'userBoard'],
+    reducers: {
+      items: true,
+      shelfBoard: true,
+      userBoard: true
+    },
     // auto generate actionCreators.js
     // auto generate selectors.js
-    middleware: [{ packageName: 'redux-multi', variableName: 'multi' }],
     // auto generate store.js
-    store: () => {
-      return `
-          shelfBoards: {
-            all: {
-              0: new Board({
-                type: 'shelfBoard',
-                id: '0',
-                name: 'S',
-                items: []
-              }),
-              1: new Board({ type: 'shelfBoard', id: '1', name: 'I' }),
-              2: new Board({ type: 'shelfBoard', id: '2', name: 'M' }),
-              3: new Board({ type: 'shelfBoard', id: '3', name: 'P' }),
-              4: new Board({ type: 'shelfBoard', id: '4', name: 'L' }),
-              5: new Board({ type: 'shelfBoard', id: '5', name: 'E' }),
-              length: 6
-            },
-            active: {
+    store: {
+      middleware: [{ packageName: 'redux-multi', variableName: 'multi' }],
+      initialState: `
+        shelfBoards: {
+          all: {
+            0: new Board({
               type: 'shelfBoard',
               id: '0',
               name: 'S',
               items: []
-            }
+            }),
+            1: new Board({ type: 'shelfBoard', id: '1', name: 'I' }),
+            2: new Board({ type: 'shelfBoard', id: '2', name: 'M' }),
+            3: new Board({ type: 'shelfBoard', id: '3', name: 'P' }),
+            4: new Board({ type: 'shelfBoard', id: '4', name: 'L' }),
+            5: new Board({ type: 'shelfBoard', id: '5', name: 'E' }),
+            length: 6
           },
-          userBoards: {
-            all: { 0: new Board({ name: 'default userBoard' }), length: 1 },
-            active: {}
-          },
-          menuBoards: {
-            all: {
-              0: new Board({ type: 'menuBoard', id: 'menu-0000', name: 'shelf-menu' }),
-              length: 1
-            }
-          },
-          items: {
-            all: {
-              0: new Item({
-                id: '0',
-                title: 'NO.1 Item',
-                subtitle: 'first one'
-              }),
-              length: 1
-            }
-          }`
+          active: {
+            type: 'shelfBoard',
+            id: '0',
+            name: 'S',
+            items: []
+          }
+        },
+        userBoards: {
+          all: { 0: new Board({ name: 'default userBoard' }), length: 1 },
+          active: {}
+        },
+        menuBoards: {
+          all: {
+            0: new Board({ type: 'menuBoard', id: 'menu-0000', name: 'shelf-menu' }),
+            length: 1
+          }
+        },
+        items: {
+          all: {
+            0: new Item({
+              id: '0',
+              title: 'NO.1 Item',
+              subtitle: 'first one'
+            }),
+            length: 1
+          }
+        }
+      `
     }
   },
   asset: {
@@ -117,6 +123,6 @@ module.exports = {
   },
   theme: {
     // TODO
-    material_ui: {}, // TODO
+    material_ui: {} // TODO
   }
 }
