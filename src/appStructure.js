@@ -13,6 +13,8 @@
 //     }
 //   }
 // }
+
+// 实际使用试试就不再是纸上谈兵了
 module.exports = {
   components: {
     Parent__C: {
