@@ -227,25 +227,27 @@ const componentFileReplacingRules = [
   ],
   // styled_components
   [
-    // // import styled-components
-    // {
-    //   pattern: "import styled from 'styled-components'",
-    //   replaceFunction: (wrapperType = 'div') => wrapperType,
-    //   parameters: ['componentProperties.wrapperType']
-    // },
-    // wrapperType
+    // import styled-components
     {
-      pattern: '/* wrapperType */ div',
-      replaceFunction: (wrapperType = 'div') => wrapperType,
-      parameters: ['componentProperties.wrapperType']
-    },
-    // style
-    {
-      pattern: '/* style */',
-      replaceFunction(style) {
-        return style ? style() : ''
+      pattern: "import styled from 'styled-components'",
+      replaceFunction: (style, wrapperType) => {
+        if (!style && !wrapperType) return ''
+        else return "import styled from 'styled-components'"
       },
-      parameters: ['componentProperties.style']
+      parameters: ['componentProperties.style', 'componentProperties.wrapperType']
+    },
+    // 设定了style
+    {
+      pattern: '/* config Wrapper */',
+      replaceFunction: (wrapperType, style) =>
+        style ? `const Wrapper = styled.${wrapperType || 'div'}\`${style || ''}\`` : '',
+      parameters: ['componentProperties.wrapperType', 'componentProperties.style']
+    },
+    // 没有设定 style
+    {
+      pattern: /Wrapper/g,
+      replaceFunction: (wrapperType = 'div', style) => (style ? 'Wrapper' : wrapperType),
+      parameters: ['componentProperties.wrapperType', 'componentProperties.style']
     }
   ]
 ]

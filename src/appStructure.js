@@ -17,13 +17,11 @@ module.exports = {
   components: {
     Parent__C: {
       UserBoards__C: {
-        style() {
-          return `
-              width: 100;
-              height: 200;
-              background-color: dodgerBlue;
-            `
-        },
+        style: `
+          width: 100;
+          height: 200;
+          background-color: dodgerBlue;
+        `,
         materialUI: {
           coreMain: 'paper_white', //需要把但个字符串包裹数组以方便解析
           coreMainStyle: `{

@@ -1,7 +1,7 @@
-export const getUser = (state) => {
+export const getUser = state => {
   // haven't defined yet
 }
 
-export const getHaha = (state) => {
+export const getHaha = state => {
   // haven't defined yet
 }

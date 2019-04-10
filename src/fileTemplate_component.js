@@ -2,18 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 /* import material-ui styles */
-
 /* import material-ui core */
 /* import material-ui icons */
 /* import child components */
 /* import selectors */
 /* import actionCreators */
 
-const Wrapper = styled./* wrapperType */ div`
-  /* style */
-`
+/* config Wrapper */
 /* set material-ui style */
-
 const $TM_FILENAME_BASE = (
   {
     /* get mapState Props */
@@ -21,7 +17,6 @@ const $TM_FILENAME_BASE = (
   }
 ) => {
   /* use material-ui style */
-
   return (
     <Wrapper className="$TM_FILENAME_BASE">
       {/* use material-ui coreMain::startTag */}

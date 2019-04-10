@@ -1,1 +1,1 @@
-export const getAction = (state) => ({ type: 'unknown' })
+export const getAction = state => ({ type: 'unknown' })

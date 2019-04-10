@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { makeStyles } from '@material-ui/styles'
-
 import { PaperWhite, Button } from '@material-ui/core'
 import { AddIcon } from '@material-ui/icons'
 
@@ -14,16 +13,14 @@ const Wrapper = styled.div`
   height: 200;
   background-color: dodgerBlue;
 `
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     width: 10 * theme.spacing.unit,
     height: 10 * theme.spacing.unit
   }
 }))
-
 const UserBoards = ({ user, haha, getAction }) => {
   const classes = useStyles()
-
   return (
     <Wrapper className="UserBoards">
       <PaperWhite className={classes.root}>UserBoards</PaperWhite>
@@ -31,12 +28,11 @@ const UserBoards = ({ user, haha, getAction }) => {
   )
 }
 
-const mapState = (state) => ({
+const mapState = state => ({
   user: getUser(state),
   haha: getHaha(state)
 })
 const mapDispatch = { getAction }
-
 export default connect(
   mapState,
   mapDispatch

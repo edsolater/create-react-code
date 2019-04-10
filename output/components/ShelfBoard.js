@@ -1,13 +1,11 @@
 import React from 'react'
-import styled from 'styled-components'
+
 import { connect } from 'react-redux'
 
 import { getUser, getHaha } from '../redux/selectors'
 
-const Wrapper = styled.div``
-
 const ShelfBoard = ({ user, haha }) => {
-  return <Wrapper className="ShelfBoard">ShelfBoard</Wrapper>
+  return <div className="ShelfBoard">ShelfBoard</div>
 }
 
 const mapState = state => ({
