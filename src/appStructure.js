@@ -26,12 +26,12 @@ module.exports = {
           background-color: dodgerBlue;
         `,
         materialUI: {
-          coreMain: 'paper_white', //需要把但个字符串包裹数组以方便解析
+          coreMain: 'button', //需要把但个字符串包裹数组以方便解析
           coreMainStyle: `{
               width: 10 * theme.spacing.unit,
               height: 10 * theme.spacing.unit
             }`,
-          coreOthers: 'button',
+          // coreOthers: 'button',
           icons: 'add'
         },
         mapState: {
@@ -63,7 +63,7 @@ module.exports = {
     // auto generate selectors.js
     // auto generate store.js
     store: {
-      middleware: [{ packageName: 'redux-multi', variableName: 'multi' }],
+      // middleware: [{ packageName: 'redux-multi', variableName: 'multi' }],
       initialState: `
         shelfBoards: {
           all: {

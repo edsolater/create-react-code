@@ -37,25 +37,38 @@ const create = {
     },
     reducers() {
       fs.mkdirSync(`./${outputFolderName}/redux/reducers`)
+    },
+    theme() {
+      fs.mkdirSync(`./${outputFolderName}/theme`)
     }
   },
   files: {
-    componentFile(partOfTree, currentPath = `./${outputFolderName}/components`) {
-      for (let [componentName, componentProperties] of Object.entries(partOfTree)) {
+    componentFile(
+      partOfTree,
+      currentPath = `./${outputFolderName}/components`
+    ) {
+      for (let [componentName, componentProperties] of Object.entries(
+        partOfTree
+      )) {
         // 预处理：删去组件的标识性前缀 & 智能提取子组件的名字
         componentName = componentName.replace('__C', '')
-        const childComponents = Object.entries(componentProperties).filter(([key, value]) =>
-          key.endsWith('__C')
+        const childComponents = Object.entries(componentProperties).filter(
+          ([key, value]) => key.endsWith('__C')
         )
         componentProperties.childComponentNames = childComponents.map(
-          ([componentName, componentProperties]) => componentName.replace('__C', '')
+          ([componentName, componentProperties]) =>
+            componentName.replace('__C', '')
         )
         // 收集 componentName
         collection.componentName.push(componentName)
         // 写入文件
         const file = `${currentPath}/${componentName}.js`
         const formattedContent = prettier.format(
-          contentRule.componentFile(componentName, componentProperties, collection),
+          contentRule.componentFile(
+            componentName,
+            componentProperties,
+            collection
+          ),
           prettierOptions
         )
         fs.writeFileSync(file, formattedContent)
@@ -78,15 +91,21 @@ const create = {
     },
     outputIndex() {
       const file = `./${outputFolderName}/index.js`
-      const formattedContent = prettier.format(contentRule.outputIndex(), prettierOptions)
+      const formattedContent = prettier.format(
+        contentRule.outputIndex(),
+        prettierOptions
+      )
       fs.writeFileSync(file, formattedContent)
     },
     initialize_browser_css() {
       const file = `./${outputFolderName}/initialize_browser_css.css`
-      const formattedContent = prettier.format(contentRule.initialize_browser_css(), {
-        ...prettierOptions,
-        parser: 'css'
-      })
+      const formattedContent = prettier.format(
+        contentRule.initialize_browser_css(),
+        {
+          ...prettierOptions,
+          parser: 'css'
+        }
+      )
       fs.writeFileSync(file, formattedContent)
     },
     initialize_material_ui() {
@@ -149,7 +168,7 @@ const create = {
       )
       fs.writeFileSync(file, formattedContent)
     },
-    store() {
+    store: () => {
       const file = `./${outputFolderName}/redux/store.js`
       const formattedContent = prettier.format(
         contentRule.store({
@@ -160,7 +179,15 @@ const create = {
         prettierOptions
       )
       fs.writeFileSync(file, formattedContent)
-    }
+    },
+    material_ui: () => {
+      const file = `./${outputFolderName}/theme/material_ui.js`
+      const formattedContent = prettier.format(
+        contentRule.material_ui(),
+        prettierOptions
+      )
+      fs.writeFileSync(file, formattedContent)
+    },
   }
 }
 
@@ -169,6 +196,7 @@ if (!exist.folder.output()) {
   create.folder.output()
   create.folder.reactComponents()
   create.folder.redux()
+  create.folder.theme()
   if (appStructure.redux.reducers) create.folder.reducers()
 }
 
@@ -182,6 +210,7 @@ create.files.reducers()
 create.files.reducerIndex()
 create.files.selector()
 create.files.actionCreator()
+create.files.material_ui()
 if (appStructure.classes && !exist.folder.classes()) {
   create.folder.classes()
   create.files.classes()

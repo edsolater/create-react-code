@@ -1,6 +1,6 @@
-import { createStore, applyMiddleware } from 'redux'
+import { createStore } from 'redux'
 import rootReducer from './reducers'
-import multi from 'redux-multi'
+
 import { Board, Item } from '../classes'
 const initialState = {
   shelfBoards: {
@@ -46,4 +46,4 @@ const initialState = {
     }
   }
 }
-export default createStore(rootReducer, initialState, applyMiddleware([multi]))
+export default createStore(rootReducer, initialState)

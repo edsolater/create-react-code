@@ -1,11 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { makeStyles } from '@material-ui/styles'
-import { PaperWhite, Button } from '@material-ui/core'
-import { AddIcon } from '@material-ui/icons'
-import { getUser, getHaha } from '../redux/selectors'
-import { getAction } from '../redux/actionCreators'
+/* import material-ui styles */
+/* import material-ui core */
+/* import material-ui icons */
+/* import child components */
+/* import selectors */
+/* import actionCreators */
 
 const Wrapper = styled.div`
   width: 100;
@@ -22,15 +23,12 @@ const UserBoards = ({ user, haha, getAction }) => {
   const classes = useStyles()
   return (
     <Wrapper className="element:UserBoards">
-      <PaperWhite className={classes.root}>UserBoards</PaperWhite>
+      <Button className={classes.root}>UserBoards</Button>
     </Wrapper>
   )
 }
-const mapState = state => ({
-  user: getUser(state),
-  haha: getHaha(state)
-})
-const mapDispatch = { getAction }
+/* set mapState with selectors */
+/* set mapDispatch with actionCreators */
 
 export default connect(
   mapState,
