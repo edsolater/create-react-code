@@ -1,14 +1,8 @@
 import React from 'react'
-import styled from 'styled-components'
-import { connect } from 'react-redux'
-/* import material-ui styles */
-/* import material-ui core */
-/* import material-ui icons */
-/* import child components */
-/* import selectors */
-/* import actionCreators */
 
-const Parent = ({}) => {
+import { UserBoards, ShelfBoard, Another } from '../components'
+
+const FileComponent = ({}) => {
   return (
     <div className="container:Parent">
       Parent
@@ -18,7 +12,5 @@ const Parent = ({}) => {
     </div>
   )
 }
-/* set mapState with selectors */
-/* set mapDispatch with actionCreators */
 
-export default Parent
+export default FileComponent

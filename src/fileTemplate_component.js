@@ -2,15 +2,16 @@ import React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 /* import material-ui styles */
+
 /* import material-ui core */
 /* import material-ui icons */
 /* import child components */
 /* import selectors */
 /* import actionCreators */
 
-/* config Wrapper */
+/* config FileStyle */
 /* set material-ui style */
-const $TM_FILENAME_BASE = (
+const FileComponent = (
   {
     /* get mapState Props */
     /* get mapDispatch Props */
@@ -18,12 +19,12 @@ const $TM_FILENAME_BASE = (
 ) => {
   /* use material-ui style */
   return (
-    <Wrapper className="componentType:$TM_FILENAME_BASE">
+    <FileStyle className="componentType:$TM_FILENAME_BASE">
       {/* use material-ui coreMain::startTag */}
       $TM_FILENAME_BASE
       {/* use child components */}
       {/* use material-ui coreMain::endTag */}
-    </Wrapper>
+    </FileStyle>
   )
 }
 /* set mapState with selectors */

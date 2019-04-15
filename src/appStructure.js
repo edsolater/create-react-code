@@ -31,7 +31,7 @@ module.exports = {
               width: 10 * theme.spacing.unit,
               height: 10 * theme.spacing.unit
             }`,
-          // coreOthers: 'button',
+          // coreOthers: ['text_field'],
           icons: 'add'
         },
         mapState: {

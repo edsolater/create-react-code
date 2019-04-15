@@ -1,20 +1,17 @@
 import React from 'react'
-import styled from 'styled-components'
 import { connect } from 'react-redux'
-/* import material-ui styles */
-/* import material-ui core */
-/* import material-ui icons */
-/* import child components */
-/* import selectors */
-/* import actionCreators */
 
-const ShelfBoard = ({ user, haha }) => {
-  return <div className="element:ShelfBoard">ShelfBoard</div>
+import { getUser, getHaha } from '../redux/selectors'
+
+const FileComponent = ({ user, haha }) => {
+  return <div className="object:ShelfBoard">ShelfBoard</div>
 }
-/* set mapState with selectors */
-/* set mapDispatch with actionCreators */
+const mapState = state => ({
+  user: getUser(state),
+  haha: getHaha(state)
+})
 
 export default connect(
   mapState,
   undefined
-)(ShelfBoard)
+)(FileComponent)

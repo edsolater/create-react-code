@@ -23,7 +23,7 @@ const componentFileReplacingRules = [
     // componentType
     {
       pattern: 'componentType',
-      replaceFunction: (componentType = 'element') => componentType,
+      replaceFunction: (componentType = 'object') => componentType,
       parameters: ['componentType']
     }
   ],
@@ -53,7 +53,9 @@ const componentFileReplacingRules = [
         pattern: '{/* use material-ui coreMain::startTag */}',
         replaceFunction: ({ coreMain } = {}) =>
           coreMain
-            ? `<${preprocessing.toPascalCase(coreMain)} className={classes.root}>`
+            ? `<${preprocessing.toPascalCase(
+                coreMain
+              )} className={classes.root}>`
             : '',
         parameters: ['materialUI']
       },
@@ -150,7 +152,9 @@ const componentFileReplacingRules = [
       replaceFunction: (mapState = {}, collection_selectorName = []) => {
         collection_selectorName.push(...Object.values(mapState))
         if (Object.entries(mapState).length) {
-          return `import {${Object.values(mapState)}} from '../redux/selectors'\n`
+          return `import {${Object.values(
+            mapState
+          )}} from '../redux/selectors'\n`
         } else {
           return ''
         }
@@ -226,19 +230,15 @@ const componentFileReplacingRules = [
     // 最终 export
     {
       pattern: '/* export component */',
-      replaceFunction(componentName, mapState, mapDispatch) {
+      replaceFunction(mapState, mapDispatch) {
         if (!mapState && !mapDispatch) {
-          return `export default ${componentName}`
+          return `export default FileComponent`
         } else {
-          return `export default connect(${mapState && 'mapState'}, ${mapDispatch &&
-            'mapDispatch'})(${componentName})`
+          return `export default connect(${mapState &&
+            'mapState'}, ${mapDispatch && 'mapDispatch'})(FileComponent)`
         }
       },
-      parameters: [
-        'componentName',
-        'mapState',
-        'mapDispatch'
-      ]
+      parameters: ['mapState', 'mapDispatch']
     }
   ],
   // styled_components
@@ -254,15 +254,18 @@ const componentFileReplacingRules = [
     },
     // 设定了style
     {
-      pattern: '/* config Wrapper */',
+      pattern: '/* config FileStyle */',
       replaceFunction: (wrapperType, style) =>
-        style ? `const Wrapper = styled.${wrapperType || 'div'}\`${style || ''}\`` : '',
+        style
+          ? `const FileStyle = styled.${wrapperType || 'div'}\`${style || ''}\``
+          : '',
       parameters: ['wrapperType', 'style']
     },
     // 没有设定 style
     {
-      pattern: /Wrapper/g,
-      replaceFunction: (wrapperType = 'div', style) => (style ? 'Wrapper' : wrapperType),
+      pattern: /FileStyle/g,
+      replaceFunction: (wrapperType = 'div', style) =>
+        style ? 'FileStyle' : wrapperType,
       parameters: ['wrapperType', 'style']
     }
   ]
@@ -307,7 +310,9 @@ const templateRules = {
       import store from '../redux/store'
       import MaterialTheme from '../theme/material_ui'
       
-      ${componentsNames.map(name => `import ${name} from './${name}'`).join('\n')}
+      ${componentsNames
+        .map(name => `import ${name} from './${name}'`)
+        .join('\n')}
       
       export {${componentsNames.join(',')}}
       export default () => (
@@ -406,7 +411,8 @@ const templateRules = {
     return `
       ${customedClassesNames
         .map(
-          customedClassName => `import ${customedClassName} from './${customedClassName}'`
+          customedClassName =>
+            `import ${customedClassName} from './${customedClassName}'`
         )
         .join('\n')}
       
@@ -416,7 +422,9 @@ const templateRules = {
   store: ({ classesNames, initialState, middleware }) => {
     // TODO: 这只是占位代码
     return `
-      import { createStore, ${middleware ? 'applyMiddleware' : ''} } from 'redux'
+      import { createStore, ${
+        middleware ? 'applyMiddleware' : ''
+      } } from 'redux'
       import rootReducer from './reducers'
       ${
         middleware
@@ -436,7 +444,9 @@ const templateRules = {
       }
       export default createStore(rootReducer, initialState, ${
         middleware
-          ? `applyMiddleware([${middleware.map(({ variableName }) => variableName)}])`
+          ? `applyMiddleware([${middleware.map(
+              ({ variableName }) => variableName
+            )}])`
           : ''
       })
     `

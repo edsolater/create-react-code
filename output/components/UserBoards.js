@@ -1,14 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-/* import material-ui styles */
-/* import material-ui core */
-/* import material-ui icons */
-/* import child components */
-/* import selectors */
-/* import actionCreators */
+import { makeStyles } from '@material-ui/styles'
 
-const Wrapper = styled.div`
+import { Button } from '@material-ui/core'
+import { AddIcon } from '@material-ui/icons'
+import { getUser, getHaha } from '../redux/selectors'
+import { getAction } from '../redux/actionCreators'
+
+const FileStyle = styled.div`
   width: 100;
   height: 200;
   background-color: dodgerBlue;
@@ -19,18 +19,21 @@ const useStyles = makeStyles(theme => ({
     height: 10 * theme.spacing.unit
   }
 }))
-const UserBoards = ({ user, haha, getAction }) => {
+const FileComponent = ({ user, haha, getAction }) => {
   const classes = useStyles()
   return (
-    <Wrapper className="element:UserBoards">
+    <FileStyle className="object:UserBoards">
       <Button className={classes.root}>UserBoards</Button>
-    </Wrapper>
+    </FileStyle>
   )
 }
-/* set mapState with selectors */
-/* set mapDispatch with actionCreators */
+const mapState = state => ({
+  user: getUser(state),
+  haha: getHaha(state)
+})
+const mapDispatch = { getAction }
 
 export default connect(
   mapState,
   mapDispatch
-)(UserBoards)
+)(FileComponent)
