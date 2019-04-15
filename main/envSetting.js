@@ -1,5 +1,5 @@
 module.exports = {
-  outputFolderName: '../output', // output folder
+  outputFolderName: 'src', // output folder
   prettierOptions: {
     parser: 'babel', // empty warnings
     semi: false,

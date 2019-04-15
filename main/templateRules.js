@@ -278,7 +278,7 @@ const templateRules = {
     componentProperties,
     collection = {}
   ) => {
-    const componentTemplate = fs.readFileSync('./fileTemplate_component.js')
+    const componentTemplate = fs.readFileSync('./main/fileTemplate_component.js')
     return Object.values(componentFileReplacingRules)
       .flat(2)
       .reduce(
