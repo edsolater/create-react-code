@@ -117,7 +117,6 @@ module.exports = {
     index: {} // TODO
   },
   theme: {
-    // TODO
-    material_ui: {} // TODO
+    material_ui: {} // FIXME: 除非指定，不然不要写得那么烦
   }
 }
